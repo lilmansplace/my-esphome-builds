@@ -16,6 +16,7 @@ logger:
 api:
 ota:
   - platform: esphome
+  - platform: http_request
 esp32_ble_tracker:
   scan_parameters:
     interval: 1100ms

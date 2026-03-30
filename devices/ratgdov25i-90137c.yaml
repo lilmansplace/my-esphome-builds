@@ -14,6 +14,7 @@ esphome:
     version: 2.5.0
 ota:
   - platform: esphome
+  - platform: http_request
 api:
   encryption:
     key: IqHnOtbvEdPEUvQvF3zSYI7q06zNnq+qWEPkLTvMSJE=
