@@ -27,25 +27,73 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
+      skip:   ${{ steps.set-matrix.outputs.skip }}
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 2   # need parent commit for diff
 
       - name: Build matrix from devices/*.yaml
         id: set-matrix
         run: |
-          # List all home device YAMLs — exclude:
-          #   secrets.yaml      (credentials, never in repo)
-          #   device-*.yaml     (public adoption templates, not home devices)
-          devices=$(
-            ls devices/*.yaml \
-            | xargs -I{} basename {} .yaml \
-            | grep -v '^device-' \
-            | grep -v '^secrets$' \
-            | jq -R . | jq -sc .
-          )
-          echo "matrix={\"device\":$devices}" >> "$GITHUB_OUTPUT"
-          echo "Devices queued for build:"
-          echo "$devices" | jq -r '.[]' | sort | nl
+          # ── Decide scope ──────────────────────────────────────────────
+          # Full build when:
+          #   - a v* tag was pushed (release)
+          #   - workflow_dispatch (manual run)
+          #   - any file under devices/includes/ changed (shared config)
+          # Partial build when:
+          #   - push to main with only specific device YAMLs changed
+          # Skip when:
+          #   - push to main with no device YAML changes at all
+
+          REF="${{ github.ref }}"
+          EVENT="${{ github.event_name }}"
+
+          if [[ "$REF" == refs/tags/v* ]] || [[ "$EVENT" == "workflow_dispatch" ]]; then
+            echo "Full build: tag release or manual trigger"
+            BUILD_ALL=true
+          else
+            CHANGED=$(git diff --name-only HEAD~1 HEAD 2>/dev/null || true)
+            if echo "$CHANGED" | grep -q "^devices/includes/"; then
+              echo "Full build: shared include file changed"
+              BUILD_ALL=true
+            else
+              BUILD_ALL=false
+            fi
+          fi
+
+          # ── Build device list ──────────────────────────────────────────
+          if [ "$BUILD_ALL" = "true" ]; then
+            devices=$(
+              ls devices/*.yaml \
+              | xargs -I{} basename {} .yaml \
+              | grep -v '^device-' \
+              | grep -v '^secrets$' \
+              | jq -R . | jq -sc .
+            )
+          else
+            CHANGED=$(git diff --name-only HEAD~1 HEAD 2>/dev/null || true)
+            devices=$(
+              echo "$CHANGED" \
+              | grep '^devices/[^/]*\.yaml$' \
+              | xargs -I{} basename {} .yaml \
+              | grep -v '^device-' \
+              | grep -v '^secrets$' \
+              | jq -R . | jq -sc .
+            )
+          fi
+
+          # ── Handle nothing-to-build ────────────────────────────────────
+          if [ "$devices" = "[]" ] || [ -z "$devices" ]; then
+            echo "No device changes detected — skipping build."
+            echo "matrix={\"device\":[]}" >> "$GITHUB_OUTPUT"
+            echo "skip=true"             >> "$GITHUB_OUTPUT"
+          else
+            echo "matrix={\"device\":$devices}" >> "$GITHUB_OUTPUT"
+            echo "skip=false"                   >> "$GITHUB_OUTPUT"
+            echo "Devices queued for build:"
+            echo "$devices" | jq -r '.[]' | sort | nl
+          fi
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Job 2 — Parallel firmware build (one runner per device)
@@ -53,6 +101,7 @@ jobs:
   build:
     name: Build ${{ matrix.device }}
     needs: generate-matrix
+    if: needs.generate-matrix.outputs.skip != 'true'
     runs-on: ubuntu-latest
     strategy:
       matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
