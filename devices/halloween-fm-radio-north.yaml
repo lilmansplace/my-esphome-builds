@@ -17,7 +17,6 @@ logger:
 api:
 ota:
   - platform: esphome
-  - platform: http_request
 sensor:
 time:
 - platform: sntp

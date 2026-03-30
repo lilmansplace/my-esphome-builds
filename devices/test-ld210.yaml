@@ -15,7 +15,6 @@ api:
 
 ota:
   - platform: esphome
-  - platform: http_request
 time:
   - platform: sntp
     timezone: "US/Mountain"
