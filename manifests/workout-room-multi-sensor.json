@@ -4,7 +4,7 @@
   "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
   "ota": {
     "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/workout-room-multi-sensor.bin",
-    "md5": "d85380a0ca7ccd15f6a14c6159c68326",
+    "md5": "0411bddcd74d710b5ef220cc465f428b",
     "summary": "ESPHome firmware v2026.3.0"
   }
 }

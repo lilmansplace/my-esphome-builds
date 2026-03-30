@@ -4,7 +4,7 @@
   "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
   "ota": {
     "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/esphome-web-670ffc.bin",
-    "md5": "e5ea811505e79514f0c62ed21c43201f",
+    "md5": "2a3c7bd51ba731d70a0a09ea1c9ed4ab",
     "summary": "ESPHome firmware v2026.3.0"
   }
 }

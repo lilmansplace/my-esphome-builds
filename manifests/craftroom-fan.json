@@ -4,7 +4,7 @@
   "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
   "ota": {
     "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/craftroom-fan.bin",
-    "md5": "44b15b008ff867c8772c6f4fd173dff2",
+    "md5": "db9db3a75116e2b48ea7393cd8aad108",
     "summary": "ESPHome firmware v2026.3.0"
   }
 }

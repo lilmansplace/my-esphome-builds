@@ -4,7 +4,7 @@
   "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
   "ota": {
     "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/milfra-mfa05-1.bin",
-    "md5": "1da21778ca0d4887d3de2eca74229716",
+    "md5": "d7cc8e4aa22510ce78b36c3a95de620d",
     "summary": "ESPHome firmware v2026.3.0"
   }
 }

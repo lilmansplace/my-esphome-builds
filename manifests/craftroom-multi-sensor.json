@@ -4,7 +4,7 @@
   "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
   "ota": {
     "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/craftroom-multi-sensor.bin",
-    "md5": "3a8d908c20dc6154b69fc275d3e0024b",
+    "md5": "712f38183a6892ab09843b9ce78be0b9",
     "summary": "ESPHome firmware v2026.3.0"
   }
 }

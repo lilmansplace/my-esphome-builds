@@ -4,7 +4,7 @@
   "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
   "ota": {
     "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/callee-closet-motion-light.bin",
-    "md5": "1f38acd4343eb2b8ded7f670b1668309",
+    "md5": "0f420f24eecb54d343f200cdc03d380d",
     "summary": "ESPHome firmware v2026.3.0"
   }
 }

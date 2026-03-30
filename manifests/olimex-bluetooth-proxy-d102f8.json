@@ -4,7 +4,7 @@
   "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
   "ota": {
     "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/olimex-bluetooth-proxy-d102f8.bin",
-    "md5": "84bf48ebc72671c1bbca77bd4e5ffb2d",
+    "md5": "9448d2d527ae80c56fa343951d9fa8c8",
     "summary": "ESPHome firmware v2026.3.0"
   }
 }

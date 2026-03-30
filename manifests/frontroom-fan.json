@@ -4,7 +4,7 @@
   "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
   "ota": {
     "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/frontroom-fan.bin",
-    "md5": "207013720d390a4efa1f260dbdce44eb",
+    "md5": "8192c1806bd5eaee8e18d2951820a0c3",
     "summary": "ESPHome firmware v2026.3.0"
   }
 }

@@ -4,7 +4,7 @@
   "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
   "ota": {
     "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/persondetector1.bin",
-    "md5": "a32f7c3ee0d3afc1964021e4f3e81398",
+    "md5": "8b423e83bbb7da6e02a26936568f1f5f",
     "summary": "ESPHome firmware v2026.3.0"
   }
 }

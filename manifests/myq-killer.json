@@ -4,7 +4,7 @@
   "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
   "ota": {
     "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/myq-killer.bin",
-    "md5": "9ff46aa9627098af7c5536ef21d46332",
+    "md5": "5cfd1905bfd2e196f8d9bd647f5edb93",
     "summary": "ESPHome firmware v2026.3.0"
   }
 }

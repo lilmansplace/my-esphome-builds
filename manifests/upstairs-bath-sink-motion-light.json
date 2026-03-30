@@ -4,7 +4,7 @@
   "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
   "ota": {
     "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/upstairs-bath-sink-motion-light.bin",
-    "md5": "5e6f881de4c91b841dd79d32385ff7b2",
+    "md5": "9fefd7fc8895182bf5dc98a407a87eb4",
     "summary": "ESPHome firmware v2026.3.0"
   }
 }

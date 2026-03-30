@@ -4,7 +4,7 @@
   "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
   "ota": {
     "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/under-basement-stairs-motion-light.bin",
-    "md5": "9328cd845cb8ee3e51ab1735d04a3575",
+    "md5": "25f83fa9e927540c05e3d7db131cdaaf",
     "summary": "ESPHome firmware v2026.3.0"
   }
 }

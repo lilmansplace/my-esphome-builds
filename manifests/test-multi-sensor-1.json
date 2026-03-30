@@ -4,7 +4,7 @@
   "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
   "ota": {
     "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/test-multi-sensor-1.bin",
-    "md5": "ef014086b8d12c4ad318ca0d16bdb073",
+    "md5": "0a7f8b9808c2182c661a273e1ac05cdb",
     "summary": "ESPHome firmware v2026.3.0"
   }
 }

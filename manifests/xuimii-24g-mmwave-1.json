@@ -4,7 +4,7 @@
   "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
   "ota": {
     "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/xuimii-24g-mmwave-1.bin",
-    "md5": "4b1ccf3dd8cbbd05197d1125454f74c4",
+    "md5": "9f97fd679c47ee62b449952783796beb",
     "summary": "ESPHome firmware v2026.3.0"
   }
 }
