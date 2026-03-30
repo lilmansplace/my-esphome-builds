@@ -1,0 +1,530 @@
+esphome:
+  name: kc868-ai
+  friendly_name: basement-sensors-panel
+  comment: Kincony KC868-AI
+  project:
+    name: Kincony.kc868-ai
+    version: 1.0.0
+
+esp32:
+  board: esp32dev
+
+## Common Configs
+web_server:
+  auth:
+    username: admin
+    password: !secret web_server_password 
+
+time:
+  - platform: sntp
+    timezone: "US/Mountain"
+    servers:
+      - 192.168.20.1
+
+ota:
+  - platform: esphome
+  - platform: web_server
+ 
+# Example configuration entry for ESP32
+i2c:
+  sda: 4
+  scl: 5
+  scan: true
+  id: bus_a
+
+# Example configuration entry
+ethernet:
+  type: LAN8720
+  mdc_pin: GPIO23
+  mdio_pin: GPIO18
+  clk_mode: GPIO17_OUT
+  phy_addr: 0
+
+  # # Optional manual IP
+  # manual_ip:
+  #   static_ip: 192.168.1.198
+  #   gateway: 192.168.1.1
+  #   subnet: 255.255.255.0 
+
+
+# Example configuration entry
+pcf8574:
+  - id: 'pcf8574_hub_in_1'  # for input channel 1-8
+    address: 0x24
+
+  - id: 'pcf8574_hub_in_2'  # for input channel 9-16
+    address: 0x25
+
+  - id: 'pcf8574_hub_in_3'  # for input channel 17-24
+    address: 0x21
+
+  - id: 'pcf8574_hub_in_4'  # for input channel 25-32
+    address: 0x22
+
+  - id: 'pcf8574_hub_in_5'  # for input channel 33-40
+    address: 0x26
+
+  - id: 'pcf8574_hub_in_6'  # for input channel 41-48
+    address: 0x23
+
+# Individual outputs
+binary_sensor:
+  - platform: gpio
+    name: "Basement Back Door"
+    id: ai_input1
+    device_class: door
+    pin:
+      pcf8574: pcf8574_hub_in_1
+      number: 0
+      mode: INPUT
+      inverted: false
+
+  - platform: gpio
+    name: "Craft Room Window"
+    id: ai_input2
+    device_class: window
+    pin:
+      pcf8574: pcf8574_hub_in_1
+      number: 1
+      mode: INPUT
+      inverted: false
+
+  - platform: gpio
+    name: "Craft Room Door"
+    id: ai_input3
+    device_class: door
+    pin:
+      pcf8574: pcf8574_hub_in_1
+      number: 2
+      mode: INPUT
+      inverted: false
+
+  - platform: gpio
+    name: "Basement Bedroom Window"
+    id: ai_input4
+    device_class: window
+    pin:
+      pcf8574: pcf8574_hub_in_1
+      number: 3
+      mode: INPUT
+      inverted: false
+
+  - platform: gpio
+    name: "Basement Bedroom Door 1"
+    id: ai_input5
+    device_class: door
+    pin:
+      pcf8574: pcf8574_hub_in_1
+      number: 4
+      mode: INPUT
+      inverted: false
+
+  - platform: gpio
+    name: "Basement Bedroom Door 2"
+    id: ai_input6
+    device_class: door
+    pin:
+      pcf8574: pcf8574_hub_in_1
+      number: 5
+      mode: INPUT
+      inverted: false
+
+  - platform: gpio
+    name: "Basement Main Window 2"
+    id: ai_input7
+    device_class: window
+    pin:
+      pcf8574: pcf8574_hub_in_1
+      number: 6
+      mode: INPUT
+      inverted: false
+
+  - platform: gpio
+    name: "Basement Bathroom Door"
+    id: ai_input8
+    device_class: door
+    pin:
+      pcf8574: pcf8574_hub_in_1
+      number: 7
+      mode: INPUT
+      inverted: false
+
+  - platform: gpio
+    name: "ai-input9"
+    id: ai_input9
+    pin:
+      pcf8574: pcf8574_hub_in_2
+      number: 0
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input10"
+    id: ai_input10
+    pin:
+      pcf8574: pcf8574_hub_in_2
+      number: 1
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input11"
+    id: ai_input11
+    pin:
+      pcf8574: pcf8574_hub_in_2
+      number: 2
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input12"
+    id: ai_input12
+    pin:
+      pcf8574: pcf8574_hub_in_2
+      number: 3
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input13"
+    id: ai_input13
+    pin:
+      pcf8574: pcf8574_hub_in_2
+      number: 4
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input14"
+    id: ai_input14
+    pin:
+      pcf8574: pcf8574_hub_in_2
+      number: 5
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input15"
+    id: ai_input15
+    pin:
+      pcf8574: pcf8574_hub_in_2
+      number: 6
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input16"
+    id: ai_input16
+    pin:
+      pcf8574: pcf8574_hub_in_2
+      number: 7
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input17"
+    id: ai_input17
+    pin:
+      pcf8574: pcf8574_hub_in_3
+      number: 0
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input18"
+    id: ai_input18
+    pin:
+      pcf8574: pcf8574_hub_in_3
+      number: 1
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input19"
+    id: ai_input19
+    pin:
+      pcf8574: pcf8574_hub_in_3
+      number: 2
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input20"
+    id: ai_input20
+    pin:
+      pcf8574: pcf8574_hub_in_3
+      number: 3
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input21"
+    id: ai_input21
+    pin:
+      pcf8574: pcf8574_hub_in_3
+      number: 4
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input22"
+    id: ai_input22
+    pin:
+      pcf8574: pcf8574_hub_in_3
+      number: 5
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input23"
+    id: ai_input23
+    pin:
+      pcf8574: pcf8574_hub_in_3
+      number: 6
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input24"
+    id: ai_input24
+    pin:
+      pcf8574: pcf8574_hub_in_3
+      number: 7
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "Workout Room Window"
+    id: ai_input25
+    device_class: window
+    pin:
+      pcf8574: pcf8574_hub_in_4
+      number: 0
+      mode: INPUT
+      inverted: false
+
+  - platform: gpio
+    name: "Basement Main Window 1"
+    id: ai_input26
+    device_class: window
+    pin:
+      pcf8574: pcf8574_hub_in_4
+      number: 1
+      mode: INPUT
+      inverted: false
+
+  - platform: gpio
+    name: "Utility Closet Door"
+    id: ai_input27
+    device_class: door
+    pin:
+      pcf8574: pcf8574_hub_in_4
+      number: 2
+      mode: INPUT
+      inverted: false
+
+  - platform: gpio
+    name: "Workout Room Door"
+    id: ai_input28
+    device_class: door
+    pin:
+      pcf8574: pcf8574_hub_in_4
+      number: 3
+      mode: INPUT
+      inverted: false
+
+  - platform: gpio
+    name: "Cold Storage Door"
+    id: ai_input29
+    device_class: door
+    pin:
+      pcf8574: pcf8574_hub_in_4
+      number: 4
+      mode: INPUT
+      inverted: false
+
+  - platform: gpio
+    name: "ai-input30"
+    id: ai_input30
+    pin:
+      pcf8574: pcf8574_hub_in_4
+      number: 5
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input31"
+    id: ai_input31
+    pin:
+      pcf8574: pcf8574_hub_in_4
+      number: 6
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input32"
+    id: ai_input32
+    pin:
+      pcf8574: pcf8574_hub_in_4
+      number: 7
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input33"
+    id: ai_input33
+    pin:
+      pcf8574: pcf8574_hub_in_5
+      number: 0
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input34"
+    id: ai_input34
+    pin:
+      pcf8574: pcf8574_hub_in_5
+      number: 1
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input35"
+    id: ai_input35
+    pin:
+      pcf8574: pcf8574_hub_in_5
+      number: 2
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input36"
+    id: ai_input36
+    pin:
+      pcf8574: pcf8574_hub_in_5
+      number: 3
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input37"
+    id: ai_input37
+    pin:
+      pcf8574: pcf8574_hub_in_5
+      number: 4
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input38"
+    id: ai_input38
+    pin:
+      pcf8574: pcf8574_hub_in_5
+      number: 5
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input39"
+    id: ai_input39
+    pin:
+      pcf8574: pcf8574_hub_in_5
+      number: 6
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input40"
+    id: ai_input40
+    pin:
+      pcf8574: pcf8574_hub_in_5
+      number: 7
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input41"
+    id: ai_input41
+    pin:
+      pcf8574: pcf8574_hub_in_6
+      number: 0
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input42"
+    id: ai_input42
+    pin:
+      pcf8574: pcf8574_hub_in_6
+      number: 1
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input43"
+    id: ai_input43
+    pin:
+      pcf8574: pcf8574_hub_in_6
+      number: 2
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input44"
+    id: ai_input44
+    pin:
+      pcf8574: pcf8574_hub_in_6
+      number: 3
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input45"
+    id: ai_input45
+    pin:
+      pcf8574: pcf8574_hub_in_6
+      number: 4
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input46"
+    id: ai_input46
+    pin:
+      pcf8574: pcf8574_hub_in_6
+      number: 5
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input47"
+    id: ai_input47
+    pin:
+      pcf8574: pcf8574_hub_in_6
+      number: 6
+      mode: INPUT
+      inverted: true
+
+  - platform: gpio
+    name: "ai-input48"
+    id: ai_input48
+    pin:
+      pcf8574: pcf8574_hub_in_6
+      number: 7
+      mode: INPUT
+      inverted: true
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+text_sensor:
+  - platform: version
+    name: "ESPHome Version"
+  - platform: ethernet_info
+    ip_address:
+      name: "IP Address"
+    mac_address:
+      name: "MAC Address"

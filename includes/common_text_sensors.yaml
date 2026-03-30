@@ -1,0 +1,7 @@
+- platform: version
+  name: "ESPHome Version"
+- platform: wifi_info
+  ip_address:
+    name: "IP Address"
+  mac_address:
+    name: "MAC Address"

@@ -1,0 +1,151 @@
+esphome:
+  name: workout-room-multi-sensor
+  friendly_name: workout-room-multi-sensor
+  comment: IKEA Vindriktning Custom
+  project:
+    name: IKEA.vindriktning_custom
+    version: 1.0.0
+  on_boot: #this starts the blue LED on and blinking while it connects to wifi. on_connect for wifi will change it. 
+    priority: 600
+    then: 
+      - light.turn_on:
+          id: sensorlight
+          effect: strobe
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+uart:
+  rx_pin: GPIO16
+  baud_rate: 9600
+i2c:
+  sda: GPIO19
+  scl: GPIO18
+  scan: true
+  id: bus_a
+logger:
+time:
+  - platform: sntp
+    timezone: "US/Mountain"
+    servers:
+      - 192.168.20.1
+api:
+ota:
+  - platform: esphome
+  - platform: web_server
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  on_connect: # change the blue led status LED based on Wifi connections
+            # NOTE: when in AP mode, it will show as "connected"
+            # this is more to show if/when locally if the wifi has connected during boot up
+    # need a condition here to either turn off or just turn off the effect so it matches the state of the LED
+    - light.turn_on: 
+        id: sensorlight
+        effect: SensorEffect
+  on_disconnect:
+    - light.turn_on: 
+        id: sensorlight
+        effect: strobe
+  reboot_timeout: 15min
+  passive_scan: True
+  ap:
+    ssid: "workout-room-multisensor"
+    password: !secret web_server_password
+    ap_timeout: 15min
+captive_portal:
+web_server:
+  auth:
+    username: admin
+    password: !secret web_server_password
+button:
+- platform: restart
+  name: Restart
+light:
+  - platform: neopixelbus
+    type: GRB
+    variant: WS2812
+    pin: GPIO17
+    num_leds: 3
+    id: sensorlight
+    on_turn_on:
+      then:
+        - light.control:
+            id: sensorlight
+            effect: "SensorEffect"
+    entity_category: config
+    effects:
+    # This lighting effect displays the air quality in 3 seperate LEDs if you have a pressure, c02,
+    # and PM2.5 measurement
+      - addressable_lambda:
+          name: "SensorEffect"
+          update_interval: 5s
+          lambda: |-
+            int c=id(scd_co2).state;
+            int h=id(scd_humidity).state;
+            int p=id(vind_pm2).state;
+            
+            // First LED
+            // PM2.5 sensor 0-15 ug/m3 green, varies from green to yellow to red over the 15-60 range,
+            // Solid red when > 60
+            float percent=(p-15)/60;
+            if(percent > 1) percent=1;
+            if(percent<  0) percent=0;
+            byte r=(byte)(percent * 255);
+            byte g=255-(byte)(percent*255);
+            it[0] = Color(r,g,0);
+            // Second LED Humidity
+            // 0-24 red, 25-40 green, > 40 blue
+            if(h < 24) it[1] = Color(255, 0, 0);
+            if(h > 24) it[1] = Color(0,255,0);
+            if(h > 40) it[1] = Color(0,0,255);
+            // Third LED Co2
+            // 0-500 green, varies from green to yellow to red over the 500-1500 range,
+            // Solid red when > 1500
+            percent=(c-500)/1500;
+            if(percent > 1) percent=1;
+            if(percent<  0) percent=0;
+            r=(byte)(percent * 255);
+            g=255-(byte)(percent*255);
+            if(!id(scd_co2).has_state()) it[2]=Color(255,255,255);
+            else it[2] = Color(r,g,0);
+sensor:
+  - platform: scd4x
+    co2:
+      name: "CO2"
+      id: scd_co2
+    temperature:
+      name: "Temperature"
+      unit_of_measurement: "°F"
+      id: scd_temp
+      filters:
+        - lambda: return (x * 1.8) + 29 - 1;
+    humidity:
+      name: "Humidity"
+      id: scd_humidity
+  - platform: pm1006
+    pm_2_5:
+      name: "Particulate Matter 2.5µm Concentration"
+      id: vind_pm2
+  - platform: bh1750
+    name: "Lux"
+    address: 0x23
+    update_interval: 10s
+    id: bh_lux
+    on_value_range:
+      - above: 20
+        then:
+          light.turn_on:
+            id: sensorlight
+            brightness: 30%
+      - below: 20
+        then:
+          light.turn_off: sensorlight
+text_sensor:
+  - platform: version
+    name: "ESPHome Version"
+  - platform: wifi_info
+    ip_address:
+      name: "IP Address"
+    mac_address:
+      name: "MAC Address"

@@ -1,0 +1,290 @@
+substitutions:
+  device_name: "milfra-mfa05"
+  upper_devicename: "Milfra Motion Switch MFA05"
+
+esphome:
+  name: "${device_name}"
+  friendly_name: "${upper_devicename}"
+  name_add_mac_suffix: true
+  platform: ESP8266
+  board: esp8285
+# Enable Home Assistant API
+api:
+
+ota:
+  - platform: esphome
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  reboot_timeout: 15min
+  ap:
+    ssid: "milfra-mfa05"
+    password: !secret web_server_password
+
+logger:
+
+web_server:
+
+captive_portal:
+
+time:
+  - platform: sntp
+    timezone: "US/Mountain"
+    servers:
+      - 192.168.20.1
+
+light: 
+  - platform: status_led
+    id: blue_led
+    pin:
+      # Blue LED
+      number: GPIO13
+      inverted: true
+
+# The green LED appears to mask the blue 
+# It also appears to be overridden by the relay
+output:
+- platform: gpio
+  # Green LED
+  id: green_led
+  pin: GPIO16
+        
+switch:
+- platform: gpio
+  name: "${device_name}_Relay"
+  id: relay
+  restore_mode: ALWAYS_OFF
+  pin: GPIO12
+  on_turn_on:
+    - output.turn_off: green_led
+  on_turn_off:
+    - output.turn_off: green_led
+
+binary_sensor:
+  - platform: gpio
+    id: button
+    pin:
+      number: GPIO0
+      mode: INPUT_PULLUP
+      inverted: true
+    on_click:
+      - script.execute: press_action
+    on_multi_click:
+      - timing:
+        - ON for at least 2s
+        then:
+          - script.execute: hold_on_action
+  - platform: gpio
+    name: ${device_name}_Motion_Sense
+    device_class: "motion"
+    pin:
+      number: GPIO5
+      inverted: true
+      mode: INPUT_PULLUP
+    on_press:
+      then:
+        - logger.log:
+            format: "state %d, motion high"
+            args: [ 'id(motion_state)' ]
+        -  if: 
+            condition:
+              lambda: |-
+                return ( id(motion_state) == 0 || id(motion_state) == 1);
+            then:
+              - script.stop: motion_stopped
+              - script.stop: motion_holdoff
+              - light.turn_off: blue_led
+              - globals.set:
+                  id: motion_state
+                  value: "1"
+              - switch.turn_on: relay
+    on_release:
+      #- output.turn_off: green_led
+      then:
+        - logger.log:
+            format: "state %d, motion low"
+            args: [ 'id(motion_state)' ]
+        - if:
+            condition:
+              lambda: |-
+                return ( id(motion_state) == 1 || id(motion_state) == 4 ) ;
+            then:
+              - script.stop: motion_holdoff
+              - script.execute: motion_stopped
+              - light.turn_off: blue_led
+  - platform: gpio
+    name: ${device_name}_Light_Sense
+    device_class: "light"
+    pin:
+      number: GPIO14
+      mode: INPUT
+globals:
+  - id: motion_on_time
+    type: int
+    restore_value: true  # Keep the last known value after reboot
+    initial_value: '15' # time to leave the relay on after motion is sensed 
+  - id: motion_off_holdoff
+    type: int
+    restore_value: true  # Keep the last known value after reboot
+    initial_value: '2'  # how long to ignore motion if turned off a short press of the button
+  - id: motion_state
+    type: int
+    restore_value: no
+    initial_value: '0'
+    # 0 = off
+    # 1 = on by motion
+    # 2 = off after motion, in hold-off
+    # 3 = hold-on state
+    # 4 = quick on via button when no motionIt
+  - id: motion_keep_on_seconds_remaining
+    type: int
+    restore_value: no
+    initial_value: '0'
+  - id: motion_hold_off_seconds
+    type: int
+    restore_value: no
+    initial_value: '0'
+      
+script:
+  - id: motion_stopped
+    mode: restart
+    then:
+      - light.turn_off: blue_led
+      - globals.set:
+          id: motion_state
+          value: "1"
+      - globals.set:
+          id: motion_keep_on_seconds_remaining
+          value: !lambda 'return id(motion_on_time);'
+      - if:
+          condition:
+            lambda: return id(motion_state) != 4;  # Check if switch is not turned off by a button press
+          then:
+            - while:
+                condition:
+                  and:
+                    - lambda: return id(motion_keep_on_seconds_remaining) > 0;
+                    - lambda: return id(motion_state) != 4;  # Check if switch is not turned off by a button press
+                then:
+                  - logger.log:
+                      format: "off after motion, seconds_remaining %d"
+                      args: [ 'id(motion_keep_on_seconds_remaining)' ]
+                  - delay: 1s
+                  - globals.set:
+                      id: motion_keep_on_seconds_remaining
+                      value: !lambda 'return id(motion_keep_on_seconds_remaining) - 1;'
+                  - if:
+                      condition:
+                        lambda: return id(motion_keep_on_seconds_remaining) == 0;
+                      then:
+                        - switch.turn_off: relay
+                        - script.execute: motion_holdoff
+  - id: motion_holdoff
+    mode: restart
+    then:
+      - light.turn_on: blue_led
+      - globals.set:
+          id: motion_hold_off_seconds
+          value: !lambda 'return id(motion_off_holdoff);'
+      - globals.set:
+          id: motion_state
+          value: "2"
+      - while:
+          condition:
+            lambda: return id(motion_hold_off_seconds) > 0;
+          then:
+            - logger.log:
+                format: "hold off, seconds_remaining %d"
+                args: [ 'id(motion_hold_off_seconds)' ]
+            - delay: 1s
+            - globals.set:
+                id: motion_hold_off_seconds
+                value: !lambda 'return id(motion_hold_off_seconds) - 1;'
+      - globals.set:
+          id: motion_state
+          value: "1"
+
+          
+  - id: press_action
+    then:
+      - logger.log:
+          format: "press action"
+      - if:
+          condition:
+            lambda: |-  # on by motion or buttons
+              return ( id(motion_state) == 1  ||  id(motion_state) == 3  || id(motion_state) == 4);   
+          then:
+            - logger.log:
+                format: "state %d, force off"
+                args: [ 'id(motion_state)' ]
+            - script.stop: motion_stopped
+            - light.turn_off: blue_led
+            - script.execute: motion_holdoff # we start the holdoff so we ignore motion events for a moment
+            - switch.turn_off: relay
+          else: 
+            - logger.log:
+                format: "state %d -> 4, short on"
+                args: [ 'id(motion_state)' ]
+            - script.stop: motion_holdoff
+            - script.stop: motion_stopped
+            - light.turn_off: blue_led
+            - switch.turn_on: relay
+            - globals.set:
+                id: motion_state
+                value: "4"
+          
+  - id: hold_on_action
+    then:
+      - logger.log:
+          format: "hold_on_action"
+      - if:
+          condition:
+            lambda: |-  # on by motion or buttons
+              return ( id(motion_state) == 1  ||  id(motion_state) == 3  || id(motion_state) == 4);   
+          then:
+            - logger.log:
+                format: "state %d, long force off"
+                args: [ 'id(motion_state)' ]
+            - script.stop: motion_stopped
+            - script.execute: motion_holdoff # we start the holdoff so we ignore motion events for a moment
+            - switch.turn_off: relay
+          else: 
+            - script.stop: motion_stopped
+            - script.stop: motion_holdoff
+            - light.turn_off: blue_led
+            - switch.turn_on: relay
+            - logger.log:
+                format: "state %d -> 3, hold on"
+                args: [ 'id(motion_state)' ]
+            - globals.set:
+                id: motion_state
+                value: "3"
+number:
+  - platform: template
+    name: "${device_name} Light Time"
+    icon: "mdi:timer-star"
+    entity_category: config
+    min_value: 30
+    max_value: 1800
+    step: 15
+    unit_of_measurement: seconds
+    optimistic: true
+    on_value:
+      then:
+        - globals.set:
+            id: motion_on_time
+            value: !lambda 'return x;'
+  - platform: template
+    name: "${device_name} Blind Time"
+    icon: "mdi:eye-off"
+    entity_category: config
+    min_value: 0
+    max_value: 60
+    step: 15
+    unit_of_measurement: seconds
+    optimistic: true
+    on_value:
+      then:
+        - globals.set:
+            id: motion_off_holdoff
+            value: !lambda 'return x;'

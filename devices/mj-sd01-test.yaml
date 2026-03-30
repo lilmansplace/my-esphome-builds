@@ -1,0 +1,208 @@
+substitutions:
+  device_name: mj_sd01 # hostname & entity_id
+  friendly_name: Martin Jerry Single Pole Dimmer
+  pwm_min_power: 15% # keep dimming functional at lowest levels
+  steps: "8"
+
+esphome:
+  name: ${device_name}
+  platform: ESP8266
+  board: esp01_1m
+
+sensor:
+  - platform: wifi_signal
+    name: "${friendly_name} WiFi Signal"
+    update_interval: 600s
+  - platform: uptime
+    name: "${friendly_name} uptime"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  reboot_timeout: 15min
+  ap:
+    ssid: "${device_name}"
+    password: !secret web_server_password
+
+logger:
+api:
+ota:
+  - platform: esphome
+
+web_server:
+  auth:
+    username: admin
+    password: !secret web_server_password 
+
+time:
+  - platform: sntp
+    timezone: "US/Mountain"
+    servers:
+      - 192.168.20.1
+
+binary_sensor:
+  - platform: gpio
+    id: up_button
+    pin:
+      number: GPIO0
+      inverted: True
+      mode: INPUT_PULLUP
+    on_press:
+      - if:
+          condition:
+            light.is_on: dimmer
+          then:
+            - lambda: !lambda |-
+                auto val = id(dimmer).remote_values.get_brightness();
+                if (val >= (${steps}.0f-1.0f)/${steps}.0f) {
+                  val = 1.0f;
+                } else {
+                  val += 1.0f/${steps}.0f;
+                }
+                auto call = id(dimmer).turn_on();
+                call.set_brightness(val);
+                call.perform();
+                if (val == 1.f) {
+                  id(flash_lights).execute();
+                }
+
+  - platform: gpio
+    id: down_button
+    pin:
+      number: GPIO1
+      inverted: True
+      mode: INPUT_PULLUP
+    on_press:
+      - if:
+          condition:
+            light.is_on: dimmer
+          then:
+            - lambda: !lambda |-
+                // Similar to light.dim_relative but add the flashing.
+                auto val = id(dimmer).remote_values.get_brightness();
+                if (val <= 1.0f/${steps}.0f) {
+                  val = .01f;
+                } else {
+                  val -= 1.0f/${steps}.0f;
+                }
+                auto call = id(dimmer).turn_on();
+                call.set_brightness(val);
+                call.perform();
+                if (val == 0.01f) {
+                  id(flash_lights).execute();
+                }
+
+  - platform: gpio
+    id: main_button
+    pin:
+      number: GPIO15
+      mode: INPUT_PULLUP
+    on_press:
+      - light.toggle:
+          id: dimmer
+
+light:
+  - platform: status_led
+    id: ledred
+    pin:
+      number: GPIO4
+      inverted: True
+  - platform: monochromatic
+    name: "${friendly_name}"
+    id: dimmer
+    output: pwm
+    default_transition_length: 2s
+    gamma_correct: "2.0"
+    on_state:
+      - script.execute: set_lights
+      
+script:
+  - id: set_lights
+    then:
+      - lambda: |-
+          if (id(dimmer).remote_values.get_state() == 0.f) {
+            id(led2).turn_off();
+            id(led3).turn_off();
+            id(led4).turn_off();
+            id(led5).turn_off();
+            // Comment the following line out if you don't want the red LED when
+            // the dimmer is off.
+            id(ledred).turn_on().perform();
+            return;
+          }
+          id(ledred).turn_off().perform();
+          auto val = id(dimmer).remote_values.get_brightness();
+          if (val >= .1f) {
+            id(led2).turn_on();
+          } else {
+            id(led2).turn_off();
+          }
+          if (val >= .36f) {
+            id(led3).turn_on();
+          } else {
+            id(led3).turn_off();
+          }
+          if (val >= .73f) {
+            id(led4).turn_on();
+          } else {
+            id(led4).turn_off();
+          }
+          if (val >= .9f) {
+            id(led5).turn_on();
+          } else {
+            id(led5).turn_off();
+          }
+  - id: flash_lights
+    then:
+      - output.turn_on: led2
+      - output.turn_on: led3
+      - output.turn_on: led4
+      - output.turn_on: led5
+      - delay: 150ms
+      - output.turn_off: led2
+      - output.turn_off: led3
+      - output.turn_off: led4
+      - output.turn_off: led5
+      - delay: 150ms
+      - output.turn_on: led2
+      - output.turn_on: led3
+      - output.turn_on: led4
+      - output.turn_on: led5
+      - delay: 150ms
+      - output.turn_off: led2
+      - output.turn_off: led3
+      - output.turn_off: led4
+      - output.turn_off: led5
+      - delay: 150ms
+      - script.execute: set_lights
+output:
+  - platform: esp8266_pwm
+    power_supply: relay
+    pin: GPIO13
+    id: pwm
+    frequency: 300 Hz
+    min_power: ${pwm_min_power}
+  - platform: gpio
+    id: led2
+    pin: GPIO14
+    inverted: true
+  - platform: gpio
+    id: led3
+    pin: GPIO12
+    inverted: true
+  - platform: gpio
+    id: led4
+    pin: GPIO5
+    inverted: true
+  - platform: gpio
+    id: led5
+    pin: GPIO3
+    inverted: true
+
+power_supply:
+  - id: relay
+    pin:
+      number: GPIO16
+      inverted: True
+    enable_time: 0s
+    keep_on_time: 0s

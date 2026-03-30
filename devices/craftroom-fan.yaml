@@ -1,0 +1,99 @@
+substitutions:
+  device_name: craftroom-fan
+  full_name: "Craft Room Fan and Light"
+  
+esphome:
+  name: ${device_name}
+  friendly_name: ${full_name}
+  comment: TreatLife DS03 (ESP)
+  project:
+    name: Treatlife.DS03_ESP
+    version: 1.0.0
+
+esp8266:
+  board: esp01_1m
+  restore_from_flash: true
+
+preferences:
+  flash_write_interval: 5min
+
+packages:
+  common: !include includes/common.yaml
+  wifi: !include includes/wifi.yaml
+  webserver: !include includes/webserver.yaml
+  ntp: !include includes/ntp.yaml
+
+uart:
+  rx_pin: GPIO3
+  tx_pin: GPIO1
+  baud_rate: 115200
+
+tuya:
+
+button:
+- platform: restart
+  name: Restart
+
+text_sensor:
+  !include includes/common_text_sensors.yaml
+
+sensor:
+  - platform: wifi_signal
+    name: ${full_name} Wifi Signal
+    update_interval: 60s
+
+  - platform: uptime
+    name: ${full_name} uptime
+
+light:
+  - platform: "tuya"
+    name: "Craft Room Light"
+    dimmer_datapoint: 6
+    switch_datapoint: 101
+    min_value: 100
+    max_value: 1000
+
+fan:
+  - platform: "tuya"
+    name: "Craft Room Fan"
+    switch_datapoint: 1
+    speed_datapoint: 3
+    speed_count: 4
+
+select:
+  - platform: tuya
+    enum_datapoint: 106
+    name: Light Model
+    optimistic: true
+    options:
+      0: Mode1
+      1: Mode2
+      2: Mode3
+
+number:
+  - platform: tuya
+    number_datapoint: 102
+    name: "Craft Room Timed Fan Countdown"
+    unit_of_measurement: ""
+    min_value: 0
+    max_value: 1440
+    step: 1
+  - platform: tuya
+    number_datapoint: 103
+    name: "Craft Room Timed Light Countdown"
+    unit_of_measurement: ""
+    min_value: 0
+    max_value: 1440
+    step: 1
+  - platform: tuya
+    number_datapoint: 105
+    name: "Craft Room Light Lowest Brightness"
+    min_value: 10
+    max_value: 1000
+    step: 1
+  - platform: tuya
+    number_datapoint: 108
+    name: "Craft Room Switch LED Brightness"
+    min_value: 0
+    max_value: 2
+    step: 1

@@ -1,0 +1,338 @@
+substitutions:
+  node_name: pantry-motion-light
+  friendly_name: Pantry Light
+
+esphome:
+  name: ${node_name}
+  comment: CloudFree SWM1 Motion Light Switch
+  name_add_mac_suffix: true
+  project:
+    name: CloudFree.SWM1
+    version: 1.0.0
+  on_boot:
+    priority: -100
+    then:
+      - lambda: "id(motion_light_time_countdown).publish_state(0);"
+      - lambda: "id(motion_cooldown_countdown).publish_state(0);"
+
+esp8266:
+  board: esp01_1m
+  restore_from_flash: true
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+   - platform: esphome
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Pantry-Motion-Light"
+    password: !secret web_server_password
+    ap_timeout: 3min
+
+captive_portal:
+
+improv_serial:
+
+time:
+  - platform: sntp
+    timezone: "US/Mountain"
+    servers:
+      - 192.168.20.1
+
+web_server:
+  auth:
+    username: admin
+    password: !secret web_server_password
+
+button:
+  - platform: restart
+    id: restart_button
+    name: "${friendly_name} Restart"
+
+  - platform: safe_mode
+    id: restart_button_safe_mode
+    name: "${friendly_name} Restart (Safe Mode)"
+
+text_sensor:
+  - platform: version
+    name: "${friendly_name} ESPHome Version"
+
+  - platform: wifi_info
+    ip_address:
+      name: "${friendly_name} IP Address"
+    mac_address:
+      name: "${friendly_name} MAC Address"
+
+number:
+  - platform: template # time the relay is ON when triggered by motion
+    id: motion_light_time
+    icon: "mdi:clock"
+    name: ${friendly_name} Motion Light On Duration
+    optimistic: true
+    restore_value: true
+    entity_category: config
+    step: 5
+    min_value: 15
+    max_value: 1800
+    initial_value: 60
+    mode: box
+    unit_of_measurement: s
+
+  - platform: template # cooldown time when physical button is pressed
+    id: motion_cooldown
+    name: ${friendly_name} Motion Cooldown
+    icon: "mdi:timer-off"
+    optimistic: true
+    restore_value: true
+    entity_category: config
+    step: 10
+    min_value: 10
+    max_value: 3600
+    initial_value: 900
+    mode: box
+    unit_of_measurement: s
+
+output:
+  - platform: gpio # green LED
+    id: green_led
+    pin: GPIO16
+
+light:
+  - platform: status_led # blue LED
+    id: blue_status
+    pin:
+      number: GPIO13
+      inverted: true
+    effects:
+      - strobe:
+          name: Fast Flash
+          colors:
+            - state: true
+              duration: 250ms
+            - state: false
+              duration: 250ms
+
+binary_sensor:
+  - platform: gpio # physical button
+    id: relay_button
+    pin:
+      number: GPIO0
+      mode: INPUT_PULLUP
+      inverted: True
+    on_multi_click:
+      - timing: # toggle relay & motion logic
+          - ON for at most 1s
+          - OFF for at least 0.2s
+        then:
+          - if:
+              condition:
+                - switch.is_on: motion_enabled
+              then:
+                - if:
+                    condition:
+                      - switch.is_on: relay
+                    then:
+                      - script.stop: motion_timeout
+                      - lambda: "id(motion_light_time_remaining) = 0;"
+                      - lambda: "id(motion_light_time_countdown).publish_state(0);"
+                      - switch.turn_off: relay
+                      - script.execute: cooldown
+                    else:
+                      - switch.turn_on: relay
+              else:
+                - switch.toggle: relay
+      - timing: # enable / disable motion
+          - ON for 2s to 5s
+        then:
+          - script.execute: motion_toggle
+      - timing: # software restart
+          - ON for 6s to 9s
+        then:
+          - button.press: restart_button
+      - timing: # software restart into safe mode
+          - ON for at least 10s
+        then:
+          - button.press: restart_button_safe_mode
+
+  - platform: gpio # motion sensor
+    id: motion
+    name: ${friendly_name} Motion
+    pin:
+      number: GPIO5
+      inverted: true
+    device_class: motion
+    filters:
+      - delayed_off: 5s
+    on_press:
+      - script.stop: motion_timeout
+      - lambda: "id(motion_light_time_remaining) = 0;"
+      - if:
+          condition:
+            or:
+              - switch.is_off: nightlight_enabled
+              - binary_sensor.is_on: daylight
+          then:
+            - light.turn_on: blue_status
+      - if:
+          condition:
+            and:
+              - switch.is_on: motion_enabled
+              - not:
+                  script.is_running: cooldown
+          then:
+            - switch.turn_on: relay
+    on_release:
+      - if:
+          condition:
+            or:
+              - switch.is_off: nightlight_enabled
+              - binary_sensor.is_on: daylight
+          then:
+            - light.turn_off: blue_status
+      - if:
+          condition:
+            - switch.is_on: motion_enabled
+          then:
+            - script.execute: motion_timeout
+
+  - platform: gpio # light sensor
+    id: daylight
+    name: ${friendly_name} Daylight
+    pin: GPIO14
+    device_class: light
+    filters:
+      - delayed_on: 5s
+      - delayed_off: 5s
+    on_press:
+      - if:
+          condition:
+            - switch.is_on: nightlight_enabled
+          then:
+            - light.turn_off: blue_status
+    on_release:
+      - if:
+          condition:
+            - switch.is_on: nightlight_enabled
+          then:
+            - light.turn_on: blue_status
+
+switch:
+  - platform: gpio # relay
+    id: relay
+    name: ${friendly_name}
+    pin: GPIO12
+
+  - platform: template # enable / disable motion
+    id: motion_enabled
+    name: ${friendly_name} Motion Enabled
+    restore_mode: RESTORE_DEFAULT_ON
+    optimistic: true
+    entity_category: config
+    device_class: switch
+
+  - platform: template # enable / disable nightlight
+    id: nightlight_enabled
+    name: ${friendly_name} Nightlight Enabled
+    restore_mode: RESTORE_DEFAULT_ON
+    optimistic: true
+    entity_category: config
+    device_class: switch
+
+script:
+  # not in motion sensor on_release because of an issue with on_press not cancelling the delay
+  - id: motion_timeout
+    mode: restart
+    then:
+      - lambda: "id(motion_light_time_remaining) = id(motion_light_time).state - 5;"
+      - while:
+          condition:
+            and:
+              - lambda: "return id(motion_light_time_remaining) > 0;"
+              - switch.is_on: motion_enabled
+          then:
+            - delay: 1s
+            - lambda: "id(motion_light_time_remaining)--;"
+      - if:
+          condition:
+            - switch.is_on: motion_enabled
+          then:
+            - switch.turn_off: relay
+
+  - id: motion_toggle
+    mode: queued
+    then:
+      - script.stop: motion_timeout
+      - script.stop: cooldown
+      - lambda: "id(motion_light_time_remaining) = 0;"
+      - lambda: "id(motion_cooldown_remaining) = 0;"
+      - lambda: "id(motion_light_time_countdown).publish_state(0);"
+      - lambda: "id(motion_cooldown_countdown).publish_state(0);"
+      - switch.toggle: motion_enabled
+      - if:
+          condition:
+            - switch.is_off: relay
+          then:
+            - switch.turn_on: relay
+            - delay: 400ms
+            - switch.turn_off: relay
+            - delay: 400ms
+            - switch.turn_on: relay
+            - delay: 400ms
+            - switch.turn_off: relay
+
+  # if mode: restart, this causes motion to not be re-enabled
+  - id: cooldown
+    mode: single
+    then:
+      - lambda: "id(motion_cooldown_remaining) = id(motion_cooldown).state;"
+      - while:
+          condition:
+            lambda: "return id(motion_cooldown_remaining) > 0;"
+          then:
+            - delay: 1s
+            - lambda: "id(motion_cooldown_remaining)--;"
+      - switch.turn_on: motion_enabled
+
+globals:
+  - id: motion_light_time_remaining
+    type: int
+    restore_value: false
+    initial_value: "0"
+
+  - id: motion_cooldown_remaining
+    type: int
+    restore_value: false
+    initial_value: "0"
+
+sensor:
+  - platform: template
+    name: "${friendly_name} Motion Light Time Countdown"
+    id: motion_light_time_countdown
+    unit_of_measurement: "s"
+
+  - platform: template
+    name: "${friendly_name} Motion Cooldown Countdown"
+    id: motion_cooldown_countdown
+    unit_of_measurement: "s"
+
+interval:
+  - interval: 1s
+    then:
+      - lambda: |-
+          if (id(motion_light_time_remaining) > 0 && id(motion_enabled).state) {
+            id(motion_light_time_remaining)--;
+            id(motion_light_time_countdown).publish_state(id(motion_light_time_remaining));
+          }
+          if (id(motion_cooldown_remaining) > 0 && id(motion_enabled).state) {
+            id(motion_cooldown_remaining)--;
+            id(motion_cooldown_countdown).publish_state(id(motion_cooldown_remaining));
+          }

@@ -1,0 +1,371 @@
+esphome:
+  name: cree-scene-controller
+  friendly_name: cree-scene-controller
+
+bk72xx:
+  board: generic-bk7231n-qfn32-tuya
+
+logger:
+
+time:
+  - platform: sntp
+    timezone: "US/Mountain"
+    servers:
+      - 192.168.20.1
+
+web_server:
+  auth:
+    username: admin
+    password: !secret web_server_password 
+captive_portal:
+
+mdns:
+
+api:
+
+ota:
+  - platform: esphome
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  reboot_timeout: 15min
+  ap:
+    ssid: ${display_name}AP
+    password: !secret web_server_password
+  manual_ip:
+    static_ip: 192.168.20.179
+    gateway: 192.168.20.1
+    subnet: 255.255.255.0
+
+button:
+- platform: restart
+  name: Restart
+
+debug:
+  update_interval: 30s
+
+text_sensor:
+- platform: debug
+  reset_reason:
+    name: Reset Reason
+- platform: libretiny
+  version:
+    name: LibreTiny Version
+- platform: template
+  name: "State"
+  id: template_text
+- platform: template
+  name: "Button 1"
+  id: button1
+  icon: "mdi:toggle-switch"
+  on_value:
+    then:
+      - if:
+          condition:
+            text_sensor.state:
+              id: button1
+              state: "OFF"
+          else:
+            - delay: 20ms
+            - text_sensor.template.publish:
+                id: button1
+                state: !lambda 'return "OFF";'
+- platform: template
+  name: "Button 2"
+  id: button2
+  icon: "mdi:toggle-switch"
+  on_value:
+    then:
+      - if:
+          condition:
+            text_sensor.state:
+              id: button2
+              state: "OFF"
+          else:
+            - delay: 20ms
+            - text_sensor.template.publish:
+                id: button2
+                state: !lambda 'return "OFF";'
+- platform: template
+  name: "Button 3"
+  id: button3
+  icon: "mdi:toggle-switch"
+  on_value:
+    then:
+      - if:
+          condition:
+            text_sensor.state:
+              id: button3
+              state: "OFF"
+          else:
+            - delay: 20ms
+            - text_sensor.template.publish:
+                id: button3
+                state: !lambda 'return "OFF";'
+- platform: template
+  name: "Button 4"
+  id: button4
+  icon: "mdi:toggle-switch"
+  on_value:
+    then:
+      - if:
+          condition:
+            text_sensor.state:
+              id: button4
+              state: "OFF"
+          else:
+            - delay: 20ms
+            - text_sensor.template.publish:
+                id: button4
+                state: !lambda 'return "OFF";'
+- platform: template
+  name: "Button 5"
+  id: button5
+  icon: "mdi:toggle-switch"
+  on_value:
+    then:
+      - if:
+          condition:
+            text_sensor.state:
+              id: button5
+              state: "OFF"
+          else:
+            - delay: 20ms
+            - text_sensor.template.publish:
+                id: button5
+                state: !lambda 'return "OFF";'
+
+sensor:
+- platform: uptime
+  name: Uptime
+
+status_led:
+  pin: P23
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: P20
+      mode: INPUT_PULLUP
+      inverted: true
+    internal: true
+    filters:
+      - delayed_on: 30ms
+      - delayed_off: 30ms
+    name: "Button 1"
+    id: rawbutton1
+    on_multi_click:
+      - timing:
+          - ON for 40ms to 400ms
+          - OFF for at least 330ms
+        then:
+          - text_sensor.template.publish:
+              id: button1
+              state: !lambda 'return "single";'
+      - timing:
+          - ON for 40ms to 400ms
+          - OFF for 40ms to 300ms
+          - ON for 40ms to 400ms
+          - OFF for at least 330ms
+        then:
+          - text_sensor.template.publish:
+              id: button1
+              state: !lambda 'return "double";'
+      - timing:
+          - ON for 40ms to 400ms
+          - OFF for 40ms to 300ms
+          - ON for 40ms to 400ms
+          - OFF for 40ms to 300ms
+          - ON for 40ms to 400ms
+          - OFF for at least 50ms
+        then:
+          - text_sensor.template.publish:
+              id: button1
+              state: !lambda 'return "triple";'
+      - timing:
+          - ON for at least 2s
+        then:
+          - text_sensor.template.publish:
+              id: button1
+              state: !lambda 'return "hold";'
+  - platform: gpio
+    pin:
+      number: P22
+      mode: INPUT_PULLUP
+      inverted: true
+    internal: true
+    filters:
+      - delayed_on: 30ms
+      - delayed_off: 30ms
+    name: "Button 2"
+    id: rawbutton2
+    on_multi_click:
+      - timing:
+          - ON for 40ms to 400ms
+          - OFF for at least 330ms
+        then:
+          - text_sensor.template.publish:
+              id: button2
+              state: !lambda 'return "single";'
+      - timing:
+          - ON for 40ms to 400ms
+          - OFF for 40ms to 300ms
+          - ON for 40ms to 400ms
+          - OFF for at least 330ms
+        then:
+          - text_sensor.template.publish:
+              id: button2
+              state: !lambda 'return "double";'
+      - timing:
+          - ON for 40ms to 400ms
+          - OFF for 40ms to 300ms
+          - ON for 40ms to 400ms
+          - OFF for 40ms to 300ms
+          - ON for 40ms to 400ms
+          - OFF for at least 50ms
+        then:
+          - text_sensor.template.publish:
+              id: button2
+              state: !lambda 'return "triple";'
+      - timing:
+          - ON for at least 2s
+        then:
+          - text_sensor.template.publish:
+              id: button2
+              state: !lambda 'return "hold";'
+  - platform: gpio
+    pin:
+      number: P28
+      mode: INPUT_PULLUP
+      inverted: true
+    internal: true
+    filters:
+      - delayed_on: 30ms
+      - delayed_off: 30ms
+    name: "Button 3"
+    id: rawbutton3
+    on_multi_click:
+      - timing:
+          - ON for 40ms to 400ms
+          - OFF for at least 330ms
+        then:
+          - text_sensor.template.publish:
+              id: button3
+              state: !lambda 'return "single";'
+      - timing:
+          - ON for 40ms to 400ms
+          - OFF for 40ms to 300ms
+          - ON for 40ms to 400ms
+          - OFF for at least 330ms
+        then:
+          - text_sensor.template.publish:
+              id: button3
+              state: !lambda 'return "double";'
+      - timing:
+          - ON for 40ms to 400ms
+          - OFF for 40ms to 300ms
+          - ON for 40ms to 400ms
+          - OFF for 40ms to 300ms
+          - ON for 40ms to 400ms
+          - OFF for at least 50ms
+        then:
+          - text_sensor.template.publish:
+              id: button3
+              state: !lambda 'return "triple";'
+      - timing:
+          - ON for at least 2s
+        then:
+          - text_sensor.template.publish:
+              id: button3
+              state: !lambda 'return "hold";'
+  - platform: gpio
+    pin:
+      number: P14
+      mode: INPUT_PULLUP
+      inverted: true
+    internal: true
+    filters:
+      - delayed_on: 30ms
+      - delayed_off: 30ms
+    name: "Button 4"
+    id: rawbutton4
+    on_multi_click:
+      - timing:
+          - ON for 40ms to 400ms
+          - OFF for at least 330ms
+        then:
+          - text_sensor.template.publish:
+              id: button4
+              state: !lambda 'return "single";'
+      - timing:
+          - ON for 40ms to 400ms
+          - OFF for 40ms to 300ms
+          - ON for 40ms to 400ms
+          - OFF for at least 330ms
+        then:
+          - text_sensor.template.publish:
+              id: button4
+              state: !lambda 'return "double";'
+      - timing:
+          - ON for 40ms to 400ms
+          - OFF for 40ms to 300ms
+          - ON for 40ms to 400ms
+          - OFF for 40ms to 300ms
+          - ON for 40ms to 400ms
+          - OFF for at least 50ms
+        then:
+          - text_sensor.template.publish:
+              id: button4
+              state: !lambda 'return "triple";'
+      - timing:
+          - ON for at least 2s
+        then:
+          - text_sensor.template.publish:
+              id: button4
+              state: !lambda 'return "hold";'
+  - platform: gpio
+    pin:
+      number: P15
+      mode: INPUT_PULLUP
+      inverted: true
+    internal: true
+    filters:
+      - delayed_on: 30ms
+      - delayed_off: 30ms
+    name: "Button 5"
+    id: rawbutton5
+    on_multi_click:
+      - timing:
+          - ON for 40ms to 400ms
+          - OFF for at least 330ms
+        then:
+          - text_sensor.template.publish:
+              id: button5
+              state: !lambda 'return "single";'
+      - timing:
+          - ON for 40ms to 400ms
+          - OFF for 40ms to 300ms
+          - ON for 40ms to 400ms
+          - OFF for at least 330ms
+        then:
+          - text_sensor.template.publish:
+              id: button5
+              state: !lambda 'return "double";'
+      - timing:
+          - ON for 40ms to 400ms
+          - OFF for 40ms to 300ms
+          - ON for 40ms to 400ms
+          - OFF for 40ms to 300ms
+          - ON for 40ms to 400ms
+          - OFF for at least 50ms
+        then:
+          - text_sensor.template.publish:
+              id: button5
+              state: !lambda 'return "triple";'
+      - timing:
+          - ON for at least 2s
+        then:
+          - text_sensor.template.publish:
+              id: button5
+              state: !lambda 'return "hold";'

@@ -1,0 +1,5 @@
+logger:
+api:
+ota:
+  - platform: esphome
+  - platform: web_server

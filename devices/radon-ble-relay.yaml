@@ -1,0 +1,71 @@
+esphome:
+  name: "radon-ble-relay"
+  friendly_name: radon-ble-relay
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+time:
+  - platform: sntp
+    timezone: "US/Mountain"
+    servers:
+      - 192.168.20.1
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "lZJcLY1j5HHDjGDceXLuEIo6KuqpFFZjF7vXw4B1RMc="
+
+ota:
+  - platform: esphome
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  passive_scan: True
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "radon-ble-relay"
+    password: !secret web_server_password
+
+captive_portal:
+
+esp32_ble_tracker:
+
+ble_client:
+  - mac_address: C6:71:85:F1:BA:3C
+    id: radon_eye_ble_id
+
+sensor:
+  - platform: radon_eye_rd200
+    ble_client_id: radon_eye_ble_id
+    update_interval: 5min # default
+    radon:
+      name: "Radon"
+      unit_of_measurement: "pCi/L"
+      accuracy_decimals: 2
+      filters:
+        - lambda: return x / 37;
+    radon_long_term:
+      name: "Radon Long Term"
+      unit_of_measurement: "pCi/L"
+      accuracy_decimals: 2
+      filters:
+        - lambda: return x / 37;
+  - platform: wifi_signal
+    name: "WiFi Signal"
+    id: wifi_dbm
+    update_interval: 60s
+  - platform: uptime
+    name: "Uptime"
+    id: device_uptime
+    update_interval: 10s
+
+button:
+  - platform: restart
+    name: "Restart Radon Relay"

@@ -1,0 +1,93 @@
+substitutions:
+  device_name: basement-bedroom-fan
+  friendly_name: Basement Bedroom Fan and Light
+  
+esphome:
+  name: ${device_name}
+  comment: TreatLife DS03 (ESP)
+  project:
+    name: Treatlife.DS03_ESP
+    version: 1.0.0
+
+esp8266:
+  board: esp01_1m
+  restore_from_flash: true
+
+preferences:
+  flash_write_interval: 5min
+
+logger:
+  # https://esphome.io/components/logger
+
+api:
+
+ota:
+  - platform: esphome
+  
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  reboot_timeout: 15min
+  passive_scan: True
+  ap:
+    ssid: "basement-bedroom-fan"
+    password: !secret web_server_password
+
+uart:
+  rx_pin: GPIO3
+  tx_pin: GPIO1
+  baud_rate: 115200
+
+time:
+  - platform: sntp
+    timezone: "US/Mountain"
+    servers:
+      - 192.168.20.1
+
+tuya:
+
+text_sensor:
+  - platform: version
+    name: "ESPHome Version"
+  - platform: wifi_info
+    ip_address:
+      name: "IP Address"
+    mac_address:
+      name: "MAC Address"
+
+sensor:
+  - platform: wifi_signal
+    name: ${friendly_name} Wifi Signal
+    update_interval: 60s
+
+  - platform: uptime
+    name: ${friendly_name} uptime
+
+light:
+  - platform: "tuya"
+    output_id: tuya_lgt_dev
+    name: ${friendly_name} Light
+    dimmer_datapoint: 10
+    switch_datapoint: 9
+    min_value: 100
+    max_value: 1000
+
+fan:
+  - platform: "tuya"
+    name: ${friendly_name} Speed
+    switch_datapoint: 1
+    speed_datapoint: 3
+    speed_count: 4
+
+number:
+  - platform: "tuya"
+    name: ${friendly_name} Dimmer Minimum
+    entity_category: config
+    min_value: 10
+    max_value: 1000
+    step: 10
+    number_datapoint: 105
+    on_value:
+      then:
+        - lambda: |-
+            id(tuya_lgt_dev).set_min_value(x);

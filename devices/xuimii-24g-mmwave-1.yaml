@@ -1,0 +1,215 @@
+esphome:
+  name: 24g-mmwave-pir-sensor-1
+  friendly_name: 24G MMWave Sensor 1
+  comment: XuiMii XM-HE201 24G MMWave PIR Presence Sensor
+  project:
+    name: XuiMii.XM-HE201
+    version: 2.0.1
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: esp-idf
+
+logger:
+
+api:
+
+ota:
+  - platform: esphome
+  - platform: web_server
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  reboot_timeout: 15min
+  passive_scan: True
+  ap:
+    ssid: "Xuimii-24G-Mmwave-1"
+    password: !secret web_server_password
+    ap_timeout: 5min
+
+captive_portal:
+
+web_server:
+  auth:
+    username: admin
+    password: !secret web_server_password
+
+text_sensor:
+  - platform: version
+    name: "ESPHome Version"
+  - platform: wifi_info
+    ip_address:
+      name: "IP Address"
+    mac_address:
+      name: "MAC Address"
+
+uart:
+  tx_pin: GPIO21
+  rx_pin: GPIO20
+  baud_rate: 256000
+  parity: NONE
+  stop_bits: 1
+
+# I2C bus for LTR-303 light sensor
+i2c:
+  sda: GPIO10
+  scl: GPIO0
+  scan: true
+
+ld2410:
+  id: ld2410_radar
+
+number:
+  - platform: ld2410
+    timeout:
+      name: "Presence Timeout"
+      id: presence_timeout
+    max_move_distance_gate:
+      name: "Max Move Distance Gate"
+      id: max_move_distance_gate
+      # Set to 4 for ~3m range instead of 8
+    max_still_distance_gate:
+      name: "Max Still Distance Gate" 
+      id: max_still_distance_gate
+      # Set to 4 for ~3m range instead of 8
+
+sensor:
+  - platform: ld2410
+    ld2410_id: ld2410_radar
+    moving_distance:
+      name: "Moving Distance"
+      id: moving_distance
+    still_distance:
+      name: "Still Distance"  
+      id: still_distance
+    moving_energy:
+      name: "Moving Energy"
+      id: moving_energy
+    still_energy:
+      name: "Still Energy"
+      id: still_energy
+    detection_distance:
+      name: "Detection Distance"
+      id: detection_distance
+
+  # LTR-303 I2C Ambient Light Sensor
+  - platform: ltr_als_ps
+    address: 0x29
+    update_interval: 10s
+    type: ALS
+    auto_mode: true
+    gain: "1X"
+    integration_time: 100ms
+    glass_attenuation_factor: 1.0
+    ambient_light:
+      name: "LTR-303 Ambient Light"
+      id: ltr303_light
+      device_class: illuminance
+      unit_of_measurement: "lx"
+      accuracy_decimals: 1
+    infrared_counts:
+      name: "LTR-303 Infrared Counts"
+      id: ltr303_ir
+    full_spectrum_counts:
+      name: "LTR-303 Full Spectrum Counts"
+      id: ltr303_full
+    actual_gain:
+      name: "LTR-303 Actual Gain"
+      id: ltr303_gain
+
+binary_sensor:
+  - platform: ld2410
+    ld2410_id: ld2410_radar
+    has_target:
+      name: "Presence Detection"
+
+  - platform: gpio
+    pin: GPIO7
+    name: "PIR Motion"
+    device_class: motion
+
+  # Zone Presence Detection (0-3m range divided into 4 zones)
+  - platform: template
+    name: "Very Close Zone Presence"
+    id: very_close_zone_presence
+    device_class: occupancy
+    lambda: |-
+      // Very Close Zone: 0-75cm
+      if (id(detection_distance).state > 0 && id(detection_distance).state <= 75) {
+        return true;
+      }
+      return false;
+    
+  - platform: template
+    name: "Close Zone Presence"
+    id: close_zone_presence  
+    device_class: occupancy
+    lambda: |-
+      // Close Zone: 75-150cm
+      if (id(detection_distance).state > 75 && id(detection_distance).state <= 150) {
+        return true;
+      }
+      return false;
+      
+  - platform: template
+    name: "Medium Zone Presence"
+    id: medium_zone_presence
+    device_class: occupancy
+    lambda: |-
+      // Medium Zone: 150-225cm
+      if (id(detection_distance).state > 150 && id(detection_distance).state <= 225) {
+        return true;
+      }
+      return false;
+      
+  - platform: template
+    name: "Far Zone Presence"
+    id: far_zone_presence
+    device_class: occupancy
+    lambda: |-
+      // Far Zone: 225-300cm
+      if (id(detection_distance).state > 225 && id(detection_distance).state <= 300) {
+        return true;
+      }
+      return false;
+
+  - platform: gpio
+    pin:
+      number: GPIO5
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "Physical Button"
+    on_click:
+      - min_length: 50ms
+        max_length: 5s
+        then:
+          - logger.log: "Short button press - restarting device"
+          - button.press: restart_button
+      - min_length: 10s
+        max_length: 30s
+        then:
+          - logger.log: "Long button hold - resetting to defaults"
+          - button.press: reset_defaults_button
+button:
+  - platform: restart
+    id: restart_button
+    name: "Restart Device"
+    
+  - platform: template
+    name: "Default Parameters"
+    id: reset_defaults_button
+    on_press:
+      then:
+        # Reset LD2410 settings to defaults (4 gates = ~3m range)
+        - number.set:
+            id: presence_timeout
+            value: 60
+        - number.set:
+            id: max_move_distance_gate  
+            value: 4
+        - number.set:
+            id: max_still_distance_gate
+            value: 4
+

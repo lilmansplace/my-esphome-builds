@@ -1,0 +1,217 @@
+esphome:
+  name: ultrapro-3way-dimmer-1
+  friendly_name: UltraPro Dimmer 2f33 1
+  on_boot: #this starts the blue LED on and blinking while it connects to wifi. on_connect for wifi will change it. 
+    priority: 600
+    then: 
+      - light.turn_on:
+          id: blue_led
+          effect: strobe
+
+bk72xx:
+  board: generic-bk7231n-qfn32-tuya
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+  - platform: esphome
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  on_connect: # change the blue led status LED based on Wifi connections
+              # NOTE: when in AP mode, it will show as "connected"
+              # this is more to show if/when locally if the wifi has connected during boot up
+    # need a condition here to either turn off or just turn off the effect so it matches the state of the LED
+    - light.turn_on: 
+        id: blue_led
+        effect: none
+  on_disconnect:
+    - light.turn_on: 
+        id: blue_led
+        effect: strobe
+  ap:
+    ssid: "Ultrapro-3Way-Dimmer-1"
+    password: "Fr3shStartesphome"
+
+captive_portal:
+
+web_server:
+  port: 80
+
+sensor:
+  - platform: wifi_signal
+    name: WiFi Signal
+    update_interval: 60s
+
+  - platform: uptime
+    name: Uptime
+
+uart:
+  baud_rate: 115200
+  tx_pin: P11
+  rx_pin: P10
+
+output:
+  #-------------- Blue Status LED output control --------------------------
+  - id: blue_ledout
+    platform: gpio
+    pin: P24    #D3/P24 = Blue LED
+ 
+  #-------------- Main Light output control --------------------------
+  - platform: template
+    id: output_template
+    type: float
+    min_power: 0.1
+    zero_means_zero: true
+    write_action:
+      # - logger.log:
+      #     format: "%f"
+      #     args: [state]
+      - uart.write: !lambda return {0x65, 0xAA, 0x00, 0x01, 0x05, 0x00, 0x00, 0x00, (uint8_t)(state * 255), 0x00, (uint8_t)((277 + (uint8_t)(state * 255)) % 256)};
+light:
+  #-------------- Blue Statue LED at bottom of switch --------------------------
+  # after creating this, found out there is a status_led platform: https://esphome.io/components/light/status_led.html
+  #                                                                https://esphome.io/components/status_led.html
+  - platform: binary
+    id: blue_led
+    output: blue_ledout
+    restore_mode: ALWAYS_ON 
+    # NOTE: can use effects... https://esphome.io/components/light/#light-effects
+    effects:
+      - strobe:
+
+  #-------------- Primary Light --------------------------
+  - platform: monochromatic
+    name: "Light"
+    id: light_primary
+    output: output_template
+    #gamma_correct: 1.0
+    #default_transition_length: 0s
+    on_turn_on: # turn on/off blue led status led based on switch state (on while off so it can be seen in the dark)
+      then:
+        - light.turn_off: blue_led
+    on_turn_off:
+      then:
+        - light.turn_on: blue_led
+
+binary_sensor:
+  #-------------- On Botton (upper paddle) --------------------------
+  - platform: gpio
+    id: button_on 
+    pin:
+      number: P7 # On Button
+      inverted: true
+    
+    on_multi_click:
+      - timing: #------------ double click on button ------------
+          - ON for at most 350ms
+          - OFF for at most 350ms
+          - ON for at most 350ms
+          - OFF for at least 350ms
+        then:
+          #S- logger.log: "On Double Clicked"
+          - light.turn_on: 
+              id: light_primary
+              brightness: 50%
+      
+      - timing: #------------ single click on button ------------
+          - ON for at most 350ms
+          - OFF for at least 500ms
+        then:
+          #- logger.log: "Single Short Clicked"
+          if:
+            condition:
+                light.is_on: light_primary
+            then:
+              - light.turn_on: 
+                  id: light_primary
+                  brightness: 100%
+            else:
+              - light.turn_on: light_primary
+    
+    on_press: #------------ press and hold on button ------------
+      - delay: 0.35s
+      - while:
+          condition:
+            binary_sensor.is_on: button_on
+          then:
+            - light.dim_relative:
+                id: light_primary
+                relative_brightness: 5%
+                transition_length: 0.1s
+            - delay: 0.1s
+  
+
+  #-------------- Off Botton (lower paddle) --------------------------
+  - platform: gpio
+    id: button_off
+    pin:
+      number: P8 # Off Button
+      inverted: true
+
+    on_multi_click:
+      - timing: #------------ double click off button ------------
+          - ON for at most 350ms
+          - OFF for at most 350ms
+          - ON for at most 350ms
+          - OFF for at least 350ms
+        then:
+          #- logger.log: "Off Double Clicked"
+          if:    #if light is on, turn off slowly, else turn on light to 1%
+            condition:
+                light.is_on: light_primary
+            then:
+              - light.turn_on: #change light immediately for feedback of the doubleclick action
+                  id: light_primary
+                  transition_length: .5s
+                  brightness: !lambda 'return( id(light_primary).remote_values.get_brightness() / 2 );'
+              - light.turn_off: #turn off light over 10 seconds
+                  id: light_primary
+                  transition_length: 10s
+            else:
+              - light.turn_on: 
+                  id: light_primary
+                  brightness: 1%
+
+      - timing: #------------ single click off button ------------
+          - ON for at most 350ms
+          - OFF for at least 500ms
+        then:
+          #- logger.log: "Off Single Clicked"
+          - light.turn_off: light_primary #transition_length if you want transition time changed
+        
+    on_press: #------------ press and hold off button ---------------
+      - delay: 0.35s
+      - while:
+          condition:
+            binary_sensor.is_on: button_off
+          then:
+            if: #keep brightness at a minimum of 1% so it does not turn off the light when dimming locally 
+              condition:
+                  lambda: 'return(id(light_primary).remote_values.get_brightness() < 0.06);'
+              then:
+                #- logger.log: "dimming to 1%...."
+                - light.turn_on: 
+                    id: light_primary
+                    brightness: 1%
+                - delay: 0.1s
+              else:
+                - light.dim_relative:
+                    id: light_primary
+                    relative_brightness: -5%
+                    transition_length: 0.1s
+                - delay: 0.1s
+  
+  #-------------- Reset Botton (behind wall plate) --------------------------
+  - platform: gpio
+    id: button_reset
+    pin:
+      number: P6 # Reset Button
+      inverted: true
+    #on_click:
+    #- TODO

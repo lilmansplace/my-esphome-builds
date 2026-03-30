@@ -1,0 +1,214 @@
+name: Build ESPHome Firmware
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Triggers
+# ─────────────────────────────────────────────────────────────────────────────
+on:
+  push:
+    branches: [main]
+    tags:
+      - "v*"           # e.g. v1.0.0  → also creates a GitHub Release
+  pull_request:
+    branches: [main]
+  workflow_dispatch:   # manual trigger from Actions tab
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Permissions
+# ─────────────────────────────────────────────────────────────────────────────
+permissions:
+  contents: write      # needed to create GitHub Releases and commit manifests
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Job 1 — Build device list matrix dynamically from devices/ directory
+# ─────────────────────────────────────────────────────────────────────────────
+jobs:
+  generate-matrix:
+    name: Generate device matrix
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build matrix from devices/*.yaml
+        id: set-matrix
+        run: |
+          # List all home device YAMLs — exclude:
+          #   secrets.yaml      (credentials, never in repo)
+          #   device-*.yaml     (public adoption templates, not home devices)
+          devices=$(
+            ls devices/*.yaml \
+            | xargs -I{} basename {} .yaml \
+            | grep -v '^device-' \
+            | grep -v '^secrets$' \
+            | jq -R . | jq -sc .
+          )
+          echo "matrix={\"device\":$devices}" >> "$GITHUB_OUTPUT"
+          echo "Devices queued for build:"
+          echo "$devices" | jq -r '.[]' | sort | nl
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Job 2 — Parallel firmware build (one runner per device)
+# ─────────────────────────────────────────────────────────────────────────────
+  build:
+    name: Build ${{ matrix.device }}
+    needs: generate-matrix
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
+      fail-fast: false   # don't cancel other devices if one fails
+    # Run ESPHome inside its official container — no installation needed
+    container:
+      image: ghcr.io/esphome/esphome:stable
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # -----------------------------------------------------------------
+      # Inject secrets — generated file exists ONLY in this ephemeral runner
+      # and is never committed to the repo.
+      # Add values in: GitHub repo → Settings → Secrets → Actions
+      # -----------------------------------------------------------------
+      - name: Generate secrets.yaml
+        env:
+          WIFI_SSID:           ${{ secrets.ESPHOME_WIFI_SSID }}
+          WIFI_PASSWORD:       ${{ secrets.ESPHOME_WIFI_PASSWORD }}
+          WEB_SERVER_PASSWORD: ${{ secrets.ESPHOME_WEB_SERVER_PASSWORD }}
+          OTA_PASSWORD:        ${{ secrets.ESPHOME_OTA_PASSWORD }}
+          API_KEY:             ${{ secrets.ESPHOME_API_KEY }}
+        run: |
+          # Written to repo root so ESPHome finds it when searching parent dirs
+          cat > secrets.yaml << EOF
+          wifi_ssid: "${WIFI_SSID}"
+          wifi_password: "${WIFI_PASSWORD}"
+          web_server_password: "${WEB_SERVER_PASSWORD}"
+          ota_password: "${OTA_PASSWORD}"
+          api_key: "${API_KEY}"
+          EOF
+          echo "secrets.yaml generated (values masked by GitHub Actions)"
+
+      # -----------------------------------------------------------------
+      # Build the firmware
+      # ESPHome is run from repo root so !include paths resolve correctly
+      # relative to each device YAML's location.
+      # -----------------------------------------------------------------
+      - name: Compile ${{ matrix.device }}
+        run: |
+          esphome compile devices/${{ matrix.device }}.yaml
+
+      # -----------------------------------------------------------------
+      # Locate and stage the firmware binary for upload
+      # ESPHome output: .esphome/build/<name>/.pioenvs/<name>/firmware.bin
+      # -----------------------------------------------------------------
+      - name: Stage firmware binary
+        run: |
+          DEVICE="${{ matrix.device }}"
+          BIN=$(find .esphome/build/${DEVICE} -name "firmware.bin" -not -path "*/.pio/*" | head -1)
+          if [ -z "$BIN" ]; then
+            # Fallback: any firmware.bin in the build tree
+            BIN=$(find .esphome/build/${DEVICE} -name "firmware.bin" | head -1)
+          fi
+          if [ -z "$BIN" ]; then
+            echo "ERROR: No firmware.bin found for ${DEVICE}"
+            find .esphome/build/${DEVICE} -type f | head -20
+            exit 1
+          fi
+          mkdir -p firmware
+          cp "$BIN" "firmware/${DEVICE}.bin"
+          SIZE=$(du -h "firmware/${DEVICE}.bin" | cut -f1)
+          echo "Staged: firmware/${DEVICE}.bin  (${SIZE})"
+
+      - name: Upload firmware artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware-${{ matrix.device }}
+          path: firmware/${{ matrix.device }}.bin
+          retention-days: 30
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Job 3 — Release (only on v* tag push)
+#   - Download all firmware artifacts
+#   - Generate OTA manifests
+#   - Commit manifests back to main
+#   - Create GitHub Release with all .bin files attached
+# ─────────────────────────────────────────────────────────────────────────────
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Need full history + ability to push back manifests
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download all firmware artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: firmware-*
+          merge-multiple: true
+          path: firmware/
+
+      - name: List firmware files
+        run: |
+          echo "Firmware files collected:"
+          ls -lh firmware/*.bin | awk '{print $5, $9}' | sort -k2
+
+      - name: Get release version
+        id: version
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/}"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "Release version: ${VERSION}"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Generate OTA manifests
+        run: |
+          python3 scripts/generate-manifests.py \
+            --version "${{ steps.version.outputs.version }}" \
+            --firmware-dir firmware/ \
+            --output-dir manifests/
+
+      - name: Commit manifests to main
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add manifests/
+          if git diff --staged --quiet; then
+            echo "No manifest changes to commit."
+          else
+            git commit -m "chore: update OTA manifests for ${{ steps.version.outputs.version }} [skip ci]"
+            git push origin HEAD:refs/heads/main
+          fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          name: "Firmware ${{ steps.version.outputs.version }}"
+          generate_release_notes: true
+          files: firmware/*.bin
+          body: |
+            ## ESPHome Firmware — ${{ steps.version.outputs.version }}
+
+            Firmware binaries for all home ESPHome devices are attached below.
+
+            ### OTA Update Manifests
+            Devices with the `update` component will automatically detect this
+            release within 6 hours. To trigger immediately, restart the device.
+
+            Manifest base URL:
+            ```
+            https://raw.githubusercontent.com/lilmansplace/my-esphome-builds/main/manifests/<device-name>.json
+            ```
+
+            ### Manual OTA Flash
+            Download the `.bin` for your device and use the ESPHome web
+            installer or `esphome upload` to flash it manually.

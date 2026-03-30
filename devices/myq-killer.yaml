@@ -1,0 +1,65 @@
+substitutions:
+  disp_name: MyQKiller
+
+esphome:
+  name: myq-killer
+  comment: MyQ PoE Clicker
+  project:
+    name: Olimex.ESP32-POE-ISO
+    version: 1.0.0
+esp32:
+  board: esp32-poe-iso
+  framework:
+    type: arduino
+
+ethernet:
+  type: LAN8720
+  mdc_pin: GPIO23
+  mdio_pin: GPIO18
+  clk_mode: GPIO17_OUT
+  phy_addr: 0
+  power_pin: GPIO12
+  
+logger:
+api:
+ota:
+  - platform: esphome
+  - platform: web_server
+    
+web_server:
+  auth:
+    username: admin
+    password: !secret web_server_password 
+
+time:
+  - platform: sntp
+    timezone: "US/Mountain"
+    servers:
+      - 192.168.20.1
+
+switch:
+  - platform: gpio
+    name: ${disp_name} Relay1
+    pin:
+      number: GPIO33
+      inverted: false
+    id: relay1
+    restore_mode: ALWAYS_OFF 
+  - platform: gpio
+    name: ${disp_name} Relay2
+    pin:
+      number: GPIO32
+      inverted: false
+    id: relay2
+    restore_mode: ALWAYS_OFF 
+  - platform: restart
+    name: ${disp_name} Restart
+
+text_sensor:
+  - platform: version
+    name: "ESPHome Version"
+  - platform: ethernet_info
+    ip_address:
+      name: "IP Address"
+    mac_address:
+      name: "MAC Address"

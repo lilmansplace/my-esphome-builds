@@ -1,0 +1,35 @@
+substitutions:
+  name: ratgdov25i-90137c
+  friendly_name: large-garage-door
+packages:
+  ratgdo.esphome: github://ratgdo/esphome-ratgdo/v25iboard.yaml@main
+esphome:
+  name: ${name}
+  name_add_mac_suffix: false
+  friendly_name: ${friendly_name}
+  comment: Rage Against The Garage Door Opener v2.5i
+  project:
+    name: RatGDO.25i
+    version: 2.5.0
+ota:
+  - platform: esphome
+api:
+  encryption:
+    key: IqHnOtbvEdPEUvQvF3zSYI7q06zNnq+qWEPkLTvMSJE=
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  passive_scan: True
+  reboot_timeout: 15min
+  ap:
+    ssid: "large-garage-door"
+    password: !secret web_server_password
+captive_portal:
+text_sensor:
+  - platform: version
+    name: "ESPHome Version"
+  - platform: wifi_info
+    ip_address:
+      name: "IP Address"
+    mac_address:
+      name: "MAC Address"

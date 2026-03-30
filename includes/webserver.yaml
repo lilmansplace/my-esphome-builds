@@ -1,0 +1,4 @@
+web_server:
+  auth:
+    username: admin
+    password: !secret web_server_password 

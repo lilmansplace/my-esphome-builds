@@ -1,0 +1,59 @@
+esphome:
+  name: lilygo-poe-bt-proxy-1
+  friendly_name: lilygo-poe-bt-proxy-1
+  comment: PoE Bluetooth Proxy
+  project:
+    name: Lilygo.PoE
+    version: 1.1.0
+  
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+logger:
+#  level: VERY_VERBOSE
+api:
+ota:
+  - platform: esphome
+
+esp32_ble_tracker:
+  scan_parameters:
+    interval: 1100ms
+    window: 1100ms
+    active: true
+
+time:
+  - platform: sntp
+    timezone: "US/Mountain"
+    servers:
+      - 192.168.20.1
+
+bluetooth_proxy:   
+  active: true
+  cache_services: true  
+
+button:
+  - platform: restart
+    id: restart_button
+    name: Restart
+  - platform: safe_mode
+    name: Safe Mode
+    entity_category: diagnostic    
+
+ethernet:
+  type: LAN8720
+  mdc_pin: GPIO23
+  mdio_pin: GPIO18
+  clk_mode: GPIO17_OUT
+  phy_addr: 0
+
+text_sensor:
+  - platform: version
+    name: "ESPHome Version"
+  - platform: ethernet_info
+    ip_address:
+      name: IP Address
+
+    mac_address:
+      name: MAC Address

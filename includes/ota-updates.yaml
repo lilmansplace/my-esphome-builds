@@ -1,0 +1,20 @@
+# Include this package in any device that should receive OTA update
+# notifications via Home Assistant.
+#
+# Prerequisites:
+#   - ESPHome >= 2024.6.0
+#   - The device YAML must also include packages/update: !include includes/ota-updates.yaml
+#   - A manifest JSON for this device must exist in /manifests/<device_name>.json
+#
+# Memory note: ESP8266 devices may be tight on RAM with http_request enabled.
+# If a device OOM-crashes after adding this, remove the package.
+
+http_request:
+  useragent: esphome/${device_name}
+  timeout: 10s
+
+update:
+  - platform: http_request
+    name: "Firmware Update"
+    source: https://raw.githubusercontent.com/lilmansplace/my-esphome-builds/main/manifests/${device_name}.json
+    update_interval: 6h
