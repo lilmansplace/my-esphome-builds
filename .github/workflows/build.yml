@@ -28,7 +28,7 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Build matrix from devices/*.yaml
         id: set-matrix
@@ -62,7 +62,7 @@ jobs:
       image: ghcr.io/esphome/esphome:stable
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       # -----------------------------------------------------------------
       # Inject secrets — generated file exists ONLY in this ephemeral runner
@@ -117,7 +117,7 @@ jobs:
           echo "Staged: firmware/${DEVICE}.bin  (${SIZE})"
 
       - name: Upload firmware artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: firmware-${{ matrix.device }}
           path: firmware/${{ matrix.device }}.bin
@@ -137,14 +137,14 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v')
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           # Need full history + ability to push back manifests
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download all firmware artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: firmware-*
           merge-multiple: true
@@ -163,7 +163,7 @@ jobs:
           echo "Release version: ${VERSION}"
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.11"
 
