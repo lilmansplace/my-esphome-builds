@@ -3,6 +3,7 @@ substitutions:
   friendly_name: large-garage-door
 packages:
   ratgdo.esphome: github://ratgdo/esphome-ratgdo/v25iboard.yaml@main
+  ota_updates: !include includes/ota-updates.yaml
 esphome:
   name: ${name}
   name_add_mac_suffix: false

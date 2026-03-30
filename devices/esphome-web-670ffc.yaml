@@ -528,3 +528,6 @@ text_sensor:
       name: "IP Address"
     mac_address:
       name: "MAC Address"
+packages:
+  ota_updates: !include includes/ota-updates.yaml
+

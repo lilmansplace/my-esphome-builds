@@ -23,6 +23,7 @@ packages:
   webserver: !include includes/webserver.yaml
   ntp: !include includes/ntp.yaml
 
+  ota_updates: !include includes/ota-updates.yaml
 uart:
   rx_pin: GPIO3
   tx_pin: GPIO1

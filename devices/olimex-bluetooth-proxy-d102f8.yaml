@@ -2,6 +2,7 @@ substitutions:
   name: olimex-bluetooth-proxy-d102f8
 packages:
   esphome.bluetooth-proxy: github://esphome/bluetooth-proxies/olimex/olimex-esp32-poe-iso.yaml@main
+  ota_updates: !include includes/ota-updates.yaml
 esphome:
   name: ${name}
   name_add_mac_suffix: false

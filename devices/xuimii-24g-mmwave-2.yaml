@@ -150,3 +150,6 @@ button:
         - number.set:
             id: max_still_distance_gate
             value: 8
+packages:
+  ota_updates: !include includes/ota-updates.yaml
+

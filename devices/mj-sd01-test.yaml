@@ -207,3 +207,6 @@ power_supply:
       inverted: True
     enable_time: 0s
     keep_on_time: 0s
+packages:
+  ota_updates: !include includes/ota-updates.yaml
+

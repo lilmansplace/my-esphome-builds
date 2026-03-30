@@ -89,3 +89,6 @@ number:
       - lambda: |-
           auto *si4703 = id(fm_radio_chip);
           si4703->set_frequency(x);
+packages:
+  ota_updates: !include includes/ota-updates.yaml
+

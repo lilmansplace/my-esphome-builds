@@ -36,3 +36,6 @@ sensor:
     id: person_count
     name: person_count
     update_interval: 5s
+packages:
+  ota_updates: !include includes/ota-updates.yaml
+

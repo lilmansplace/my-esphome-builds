@@ -263,3 +263,6 @@ sensor:
   - { power_id: cir14, platform: total_daily_energy, accuracy_decimals: 0, name: "Circuit 14 Daily Energy", filters: *throttle_time }
   - { power_id: cir15, platform: total_daily_energy, accuracy_decimals: 0, name: "Circuit 15 Daily Energy", filters: *throttle_time }
   - { power_id: cir16, platform: total_daily_energy, accuracy_decimals: 0, name: "Circuit 16 Daily Energy", filters: *throttle_time }
+packages:
+  ota_updates: !include includes/ota-updates.yaml
+

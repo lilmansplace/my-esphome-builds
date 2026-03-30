@@ -148,3 +148,6 @@ select:
       name: light function
     out_pin_level:
       name: out pin level
+packages:
+  ota_updates: !include includes/ota-updates.yaml
+

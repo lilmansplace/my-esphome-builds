@@ -336,5 +336,6 @@ interval:
             id(motion_cooldown_remaining)--;
             id(motion_cooldown_countdown).publish_state(id(motion_cooldown_remaining));
           }
+packages:
+  ota_updates: !include includes/ota-updates.yaml
 
-    

@@ -73,3 +73,6 @@ light:
    warm_white_color_temperature: 500 mireds
   #  effects:
   #    - ddp
+packages:
+  ota_updates: !include includes/ota-updates.yaml
+

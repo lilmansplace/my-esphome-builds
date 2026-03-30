@@ -95,3 +95,6 @@ button:
       tea5767.set_frequency:
         id: radio
         frequency: 99.5 Mhz
+packages:
+  ota_updates: !include includes/ota-updates.yaml
+

@@ -289,3 +289,6 @@ number:
         - globals.set:
             id: motion_off_holdoff
             value: !lambda 'return x;'
+packages:
+  ota_updates: !include includes/ota-updates.yaml
+

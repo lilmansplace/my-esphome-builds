@@ -176,4 +176,7 @@ binary_sensor:
 status_led:
   pin:
     number: GPIO5
-    inverted: true  
+    inverted: true
+packages:
+  ota_updates: !include includes/ota-updates.yaml
+

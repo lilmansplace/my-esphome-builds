@@ -215,3 +215,6 @@ binary_sensor:
       inverted: true
     #on_click:
     #- TODO
+packages:
+  ota_updates: !include includes/ota-updates.yaml
+

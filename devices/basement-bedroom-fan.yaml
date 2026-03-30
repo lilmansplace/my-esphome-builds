@@ -91,3 +91,6 @@ number:
       then:
         - lambda: |-
             id(tuya_lgt_dev).set_min_value(x);
+packages:
+  ota_updates: !include includes/ota-updates.yaml
+

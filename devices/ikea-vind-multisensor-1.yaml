@@ -122,3 +122,6 @@ sensor:
       - below: 20
         then:
           light.turn_off: sensorlight
+packages:
+  ota_updates: !include includes/ota-updates.yaml
+

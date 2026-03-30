@@ -281,3 +281,6 @@ script:
               id(expected_duration).publish_state(id(timer_preset_${preset_name_6}).state);
               break;
           }
+packages:
+  ota_updates: !include includes/ota-updates.yaml
+

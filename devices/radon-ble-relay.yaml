@@ -69,3 +69,6 @@ sensor:
 button:
   - platform: restart
     name: "Restart Radon Relay"
+packages:
+  ota_updates: !include includes/ota-updates.yaml
+
