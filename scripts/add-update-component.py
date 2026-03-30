@@ -24,7 +24,7 @@ from pathlib import Path
 
 
 DEVICES_DIR = Path("devices")
-OTA_PACKAGE_LINE = "  ota_updates: !include ../includes/ota-updates.yaml\n"
+OTA_PACKAGE_LINE = "  ota_updates: !include includes/ota-updates.yaml\n"
 
 
 def process_file(yaml_path: Path, dry_run: bool) -> str:
