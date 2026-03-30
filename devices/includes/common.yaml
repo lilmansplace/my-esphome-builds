@@ -3,3 +3,4 @@ api:
 ota:
   - platform: esphome
   - platform: web_server
+  - platform: http_request
