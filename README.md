@@ -77,8 +77,9 @@ Add these 5 secrets in **Settings → Secrets and variables → Actions**:
 | `ESPHOME_WIFI_SSID` | Home WiFi network name |
 | `ESPHOME_WIFI_PASSWORD` | Home WiFi password |
 | `ESPHOME_WEB_SERVER_PASSWORD` | ESPHome web server auth password |
-| `ESPHOME_OTA_PASSWORD` | OTA update password |
-| `ESPHOME_API_KEY` | Home Assistant API encryption key |
+
+> No OTA password or API encryption key — devices run open on a trusted local network.
+> The `api:` and `ota:` components in `includes/common.yaml` have no password set.
 
 ---
 

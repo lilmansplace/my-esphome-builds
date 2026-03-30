@@ -74,16 +74,13 @@ jobs:
           WIFI_SSID:           ${{ secrets.ESPHOME_WIFI_SSID }}
           WIFI_PASSWORD:       ${{ secrets.ESPHOME_WIFI_PASSWORD }}
           WEB_SERVER_PASSWORD: ${{ secrets.ESPHOME_WEB_SERVER_PASSWORD }}
-          OTA_PASSWORD:        ${{ secrets.ESPHOME_OTA_PASSWORD }}
-          API_KEY:             ${{ secrets.ESPHOME_API_KEY }}
         run: |
-          # Written to repo root so ESPHome finds it when searching parent dirs
+          # Written to repo root so ESPHome finds it when searching parent dirs.
+          # No OTA password or API key — open access on trusted local network.
           cat > secrets.yaml << EOF
           wifi_ssid: "${WIFI_SSID}"
           wifi_password: "${WIFI_PASSWORD}"
           web_server_password: "${WEB_SERVER_PASSWORD}"
-          ota_password: "${OTA_PASSWORD}"
-          api_key: "${API_KEY}"
           EOF
           echo "secrets.yaml generated (values masked by GitHub Actions)"
 
