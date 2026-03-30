@@ -75,14 +75,15 @@ jobs:
           WIFI_PASSWORD:       ${{ secrets.ESPHOME_WIFI_PASSWORD }}
           WEB_SERVER_PASSWORD: ${{ secrets.ESPHOME_WEB_SERVER_PASSWORD }}
         run: |
-          # Written to repo root so ESPHome finds it when searching parent dirs.
+          # Written to devices/ — ESPHome looks for secrets.yaml in the same
+          # directory as the config file being compiled.
           # No OTA password or API key — open access on trusted local network.
-          cat > secrets.yaml << EOF
+          cat > devices/secrets.yaml << EOF
           wifi_ssid: "${WIFI_SSID}"
           wifi_password: "${WIFI_PASSWORD}"
           web_server_password: "${WEB_SERVER_PASSWORD}"
           EOF
-          echo "secrets.yaml generated (values masked by GitHub Actions)"
+          echo "devices/secrets.yaml generated (values masked by GitHub Actions)"
 
       # -----------------------------------------------------------------
       # Build the firmware
