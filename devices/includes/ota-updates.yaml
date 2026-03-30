@@ -12,6 +12,7 @@
 http_request:
   useragent: esphome/${device_name}
   timeout: 10s
+  verify_ssl: false   # ESP8266 does not support certificate verification
 
 update:
   - platform: http_request
