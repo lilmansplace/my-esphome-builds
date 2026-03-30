@@ -1,0 +1,10 @@
+{
+  "name": "upstairs-bathroom-fan",
+  "version": "v2026.3.0",
+  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
+  "ota": {
+    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/upstairs-bathroom-fan.bin",
+    "md5": "732f9d1dd6819e145eaa3664edae1f57",
+    "summary": "ESPHome firmware v2026.3.0"
+  }
+}

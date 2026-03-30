@@ -1,0 +1,10 @@
+{
+  "name": "headless-fm-radio1",
+  "version": "v2026.3.0",
+  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
+  "ota": {
+    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/headless-fm-radio1.bin",
+    "md5": "af8b27093bf87cec7e5d350eb405ccc0",
+    "summary": "ESPHome firmware v2026.3.0"
+  }
+}

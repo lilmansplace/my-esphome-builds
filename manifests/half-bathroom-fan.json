@@ -1,0 +1,10 @@
+{
+  "name": "half-bathroom-fan",
+  "version": "v2026.3.0",
+  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
+  "ota": {
+    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/half-bathroom-fan.bin",
+    "md5": "8b581e9ddc90569c280e206a83dcb69c",
+    "summary": "ESPHome firmware v2026.3.0"
+  }
+}

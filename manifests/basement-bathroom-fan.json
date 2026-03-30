@@ -1,0 +1,10 @@
+{
+  "name": "basement-bathroom-fan",
+  "version": "v2026.3.0",
+  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
+  "ota": {
+    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/basement-bathroom-fan.bin",
+    "md5": "f5aefc5dbcba524889a62ee5b0b58edb",
+    "summary": "ESPHome firmware v2026.3.0"
+  }
+}

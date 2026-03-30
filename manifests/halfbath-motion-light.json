@@ -1,0 +1,10 @@
+{
+  "name": "halfbath-motion-light",
+  "version": "v2026.3.0",
+  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
+  "ota": {
+    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/halfbath-motion-light.bin",
+    "md5": "b613f6f3cccf07cb040e448c69ec9f96",
+    "summary": "ESPHome firmware v2026.3.0"
+  }
+}

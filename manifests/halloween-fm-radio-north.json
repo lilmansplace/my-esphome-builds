@@ -1,0 +1,10 @@
+{
+  "name": "halloween-fm-radio-north",
+  "version": "v2026.3.0",
+  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
+  "ota": {
+    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/halloween-fm-radio-north.bin",
+    "md5": "ba76dc331db38163d7002470cf1cd75b",
+    "summary": "ESPHome firmware v2026.3.0"
+  }
+}

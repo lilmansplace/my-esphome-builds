@@ -1,0 +1,10 @@
+{
+  "name": "cree-scene-controller",
+  "version": "v2026.3.0",
+  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
+  "ota": {
+    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/cree-scene-controller.bin",
+    "md5": "59110888d3df074b6a8f22aa99a0f809",
+    "summary": "ESPHome firmware v2026.3.0"
+  }
+}

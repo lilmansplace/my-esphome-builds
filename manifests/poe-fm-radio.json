@@ -1,0 +1,10 @@
+{
+  "name": "poe-fm-radio",
+  "version": "v2026.3.0",
+  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
+  "ota": {
+    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/poe-fm-radio.bin",
+    "md5": "1a1383bfd73bf7ed6362f15196bd7309",
+    "summary": "ESPHome firmware v2026.3.0"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "ratgdov25i-90137c",
+  "version": "v2026.3.0",
+  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
+  "ota": {
+    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/ratgdov25i-90137c.bin",
+    "md5": "0ba4e10b9fd1a7b9f98cbc4050dcd243",
+    "summary": "ESPHome firmware v2026.3.0"
+  }
+}
