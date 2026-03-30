@@ -15,6 +15,7 @@ logger:
 api:
 ota:
   - platform: esphome
+  - platform: http_request
 web_server:
   auth:
     username: admin

@@ -26,6 +26,7 @@ ota:
   - platform: esphome
   - platform: web_server
     
+  - platform: http_request
 web_server:
   auth:
     username: admin

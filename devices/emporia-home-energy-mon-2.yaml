@@ -30,7 +30,7 @@ time:
 ota:
   - platform: esphome
   - platform: web_server
-
+  - platform: http_request
 logger:
   logs:
     # by default, every reading will be printed to the UART, which is very slow
