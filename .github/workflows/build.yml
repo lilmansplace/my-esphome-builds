@@ -101,15 +101,17 @@ jobs:
       - name: Stage firmware binary
         run: |
           DEVICE="${{ matrix.device }}"
-          # ESPHome writes to devices/.esphome/build/ because the config is in devices/
-          BIN=$(find devices/.esphome/build/${DEVICE} -name "firmware.bin" -not -path "*/.pio/*" | head -1)
+          # Each runner only builds one device, so find the only firmware.bin present.
+          # Don't match by dir name — the build dir uses the YAML's internal 'name:'
+          # field which may differ from the filename (e.g. airgradient-one-v9-1.yaml
+          # builds into devices/.esphome/build/airgradient-one-1/).
+          BIN=$(find devices/.esphome/build/ -name "firmware.bin" -not -path "*/.pio/*" | head -1)
           if [ -z "$BIN" ]; then
-            # Fallback: search entire workspace
-            BIN=$(find . -path "*/.esphome/build/${DEVICE}*/firmware.bin" | head -1)
+            BIN=$(find devices/.esphome/build/ -name "firmware.bin" | head -1)
           fi
           if [ -z "$BIN" ]; then
             echo "ERROR: No firmware.bin found for ${DEVICE}"
-            find . -name "firmware.bin" | head -20
+            find devices/.esphome/build/ -type f | head -20
             exit 1
           fi
           mkdir -p firmware
