@@ -221,7 +221,7 @@ status_led:
 button:
   - platform: restart
     id: restart_button
-    name: Restart
+    name: "Device Restart"
     entity_category: diagnostic
   - platform: ld2410
     factory_reset:

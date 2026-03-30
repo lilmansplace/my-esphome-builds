@@ -75,8 +75,10 @@ light:
             effect: "SensorEffect"
     entity_category: config
     effects:
-    # This lighting effect displays the air quality in 3 seperate LEDs if you have a pressure, c02,
-    # and PM2.5 measurement
+      - strobe:
+          name: strobe
+      # This lighting effect displays the air quality in 3 seperate LEDs if you have a pressure, c02,
+      # and PM2.5 measurement
       - addressable_lambda:
           name: "SensorEffect"
           update_interval: 5s
