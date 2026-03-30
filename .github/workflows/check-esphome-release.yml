@@ -1,0 +1,66 @@
+name: Check for new ESPHome release
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Runs every Monday at 10am UTC.
+# Compares the latest ESPHome stable release against the last tag in this repo.
+# If ESPHome has released a new version, pushes a matching tag which triggers
+# the main build.yml workflow to compile all firmware and create a GitHub Release.
+# ─────────────────────────────────────────────────────────────────────────────
+on:
+  schedule:
+    - cron: '0 10 * * 1'   # Every Monday 10:00 UTC
+  workflow_dispatch:        # Also triggerable manually from Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  check:
+    name: Check ESPHome upstream version
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # Need full tag history
+
+      - name: Get latest ESPHome stable release
+        id: esphome
+        run: |
+          VERSION=$(curl -sf https://api.github.com/repos/esphome/esphome/releases/latest | jq -r .tag_name)
+          if [ -z "$VERSION" ] || [ "$VERSION" = "null" ]; then
+            echo "ERROR: Could not fetch ESPHome release version"
+            exit 1
+          fi
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "Latest ESPHome release: ${VERSION}"
+
+      - name: Get last tag in this repo
+        id: last
+        run: |
+          LAST=$(git tag --sort=-version:refname | head -1)
+          echo "tag=${LAST}" >> "$GITHUB_OUTPUT"
+          echo "Last build tag in this repo: ${LAST:-'(none)'}"
+
+      - name: Compare versions
+        id: compare
+        run: |
+          NEW="${{ steps.esphome.outputs.version }}"
+          LAST="${{ steps.last.outputs.tag }}"
+          if [ "$NEW" = "$LAST" ]; then
+            echo "Up to date — no new build needed."
+            echo "needs_build=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "New ESPHome version detected: ${NEW} (last built: ${LAST:-none})"
+            echo "needs_build=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Push new release tag
+        if: steps.compare.outputs.needs_build == 'true'
+        run: |
+          NEW_TAG="${{ steps.esphome.outputs.version }}"
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag "${NEW_TAG}"
+          git push origin "${NEW_TAG}"
+          echo "Tagged ${NEW_TAG} — build.yml will now run the full firmware build and release."
