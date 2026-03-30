@@ -96,19 +96,19 @@ jobs:
 
       # -----------------------------------------------------------------
       # Locate and stage the firmware binary for upload
-      # ESPHome output: .esphome/build/<name>/.pioenvs/<name>/firmware.bin
+      # ESPHome output: devices/.esphome/build/<name>/.pioenvs/<name>/firmware.bin
       # -----------------------------------------------------------------
       - name: Stage firmware binary
         run: |
           DEVICE="${{ matrix.device }}"
-          BIN=$(find .esphome/build/${DEVICE} -name "firmware.bin" -not -path "*/.pio/*" | head -1)
+          BIN=$(find devices/.esphome/build/${DEVICE} -name "firmware.bin" -not -path "*/.pio/*" | head -1)
           if [ -z "$BIN" ]; then
             # Fallback: any firmware.bin in the build tree
-            BIN=$(find .esphome/build/${DEVICE} -name "firmware.bin" | head -1)
+            BIN=$(find devices/.esphome/build/${DEVICE} -name "firmware.bin" | head -1)
           fi
           if [ -z "$BIN" ]; then
             echo "ERROR: No firmware.bin found for ${DEVICE}"
-            find .esphome/build/${DEVICE} -type f | head -20
+            find devices/.esphome/build/${DEVICE} -type f | head -20
             exit 1
           fi
           mkdir -p firmware

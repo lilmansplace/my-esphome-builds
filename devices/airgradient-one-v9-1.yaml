@@ -744,7 +744,6 @@ light:
     rgb_order: GRB
     pin: GPIO10  # Pin 16
     num_leds: 11
-    rmt_channel: 0
     chipset: ws2812
     id: led_strip
     internal: true

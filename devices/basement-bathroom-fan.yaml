@@ -13,6 +13,7 @@ substitutions:
   preset_name_6: 4h
   comment: Minoston Fan Timer MT10W
   devicename: "basement-bathroom-fan"
+  device_name: "basement-bathroom-fan"
 
 esphome:
   name: ${devicename}
@@ -26,7 +27,7 @@ web_server:
     username: admin
     password: !secret web_server_password 
 
-wifi: !include includes/wifi.yaml
+<<: !include includes/wifi.yaml
 
 time:
   - platform: sntp

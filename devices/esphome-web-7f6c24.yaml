@@ -43,7 +43,7 @@ sensor:
     address: 0x23
     update_interval: 60s
 # Temp Humidity Sensor
-  - platform: bme280
+  - platform: bme280_i2c
     temperature:
       name: "Outside Temperature"
       oversampling: 16x
