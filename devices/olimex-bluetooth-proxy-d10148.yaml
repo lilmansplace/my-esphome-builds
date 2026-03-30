@@ -5,7 +5,6 @@ packages:
   ota_updates: !include includes/ota-updates.yaml
 ota:
   - platform: esphome
-  - platform: web_server
   - platform: http_request
 
 esphome:
