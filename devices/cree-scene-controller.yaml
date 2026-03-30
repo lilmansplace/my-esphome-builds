@@ -370,5 +370,4 @@ binary_sensor:
               id: button5
               state: !lambda 'return "hold";'
 packages:
-  ota_updates: !include includes/ota-updates.yaml
 

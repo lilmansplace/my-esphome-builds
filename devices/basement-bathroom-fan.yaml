@@ -279,5 +279,4 @@ script:
               break;
           }
 packages:
-  ota_updates: !include includes/ota-updates.yaml
 

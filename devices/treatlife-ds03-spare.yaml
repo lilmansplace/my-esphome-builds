@@ -119,5 +119,4 @@ number:
     max_value: 2
     step: 1
 packages:
-  ota_updates: !include includes/ota-updates.yaml
 

@@ -216,5 +216,4 @@ binary_sensor:
     #on_click:
     #- TODO
 packages:
-  ota_updates: !include includes/ota-updates.yaml
 
