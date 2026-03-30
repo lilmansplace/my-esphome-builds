@@ -13,8 +13,6 @@ time:
       - 192.168.20.1
 logger:
 api:
-  encryption:
-    key: !secret api_key
 ota:
   - platform: esphome
 web_server:
