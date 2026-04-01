@@ -1,0 +1,305 @@
+substitutions:
+  comment: Minoston Fan Timer MT10W-ESP
+  device_name: half-bathroom-fan
+
+esphome:
+  name: ${device_name}
+  comment: ${comment}
+  project:
+    name: Minoston.MT10W-ESP
+    version: 1.0.0
+
+esp8266:
+  board: esp01_1m
+
+logger:
+  baud_rate: 0
+  logs:
+    tuya: INFO
+    sensor: INFO
+
+packages:
+  common: !include includes/common.yaml
+  wifi: !include includes/wifi.yaml
+  ntp: !include includes/ntp.yaml
+  webserver: !include includes/webserver.yaml
+  ota_updates: !include includes/ota-updates.yaml
+
+uart:
+  rx_pin: GPIO3
+  tx_pin: GPIO1
+  baud_rate: 9600
+
+tuya:
+  on_datapoint_update:
+    - sensor_datapoint: 7
+      datapoint_type: int
+      then:
+        - lambda: |-
+            id(time_remaining).publish_state(x);
+
+text_sensor:
+  !include includes/common_text_sensors.yaml
+
+switch:
+- platform: "tuya"
+  id: fan
+  name: ${device_name} Timed
+  icon: mdi:fan-clock
+  switch_datapoint: 1
+- platform: "tuya"
+  id: fan_untimed
+  icon: mdi:fan
+  name: ${device_name} Untimed
+  switch_datapoint: 111
+
+sensor:
+- platform: template
+  id: time_remaining
+  name: ${device_name} Time Remaining
+  icon: mdi:timer
+  accuracy_decimals: 0
+  filters:
+    - timeout:
+        timeout: 10s
+        value: 0
+  unit_of_measurement: s
+  device_class: duration
+  state_class: measurement
+- platform: template
+  id: expected_duration
+  name: ${device_name} Expected Duration
+  icon: mdi:timer
+  accuracy_decimals: 0
+  unit_of_measurement: s
+  device_class: duration
+  state_class: measurement
+
+number:
+- platform: "tuya"
+  id: "timer_preset_id"
+  name: "Timer Preset ID"
+  number_datapoint: 108
+  min_value: 1
+  max_value: 6
+  step: 1
+  mode: slider
+  internal: true
+  on_value:
+    then:
+      - lambda: id(set_expected_duration)->execute(x);
+- platform: "tuya"
+  id: led_brightness
+  name: ${device_name} LED Brightness
+  number_datapoint: 107
+  min_value: 0
+  max_value: 100
+  step: 1
+  entity_category: config
+  mode: slider
+
+# Raw Tuya preset numbers (seconds, hidden from HA)
+- platform: "tuya"
+  id: timer_preset_5m_raw
+  number_datapoint: 101
+  min_value: 5
+  max_value: 1440
+  step: 1
+  internal: true
+- platform: "tuya"
+  id: timer_preset_10m_raw
+  number_datapoint: 102
+  min_value: 5
+  max_value: 1440
+  step: 1
+  internal: true
+- platform: "tuya"
+  id: timer_preset_30m_raw
+  number_datapoint: 103
+  min_value: 5
+  max_value: 1440
+  step: 1
+  internal: true
+- platform: "tuya"
+  id: timer_preset_60m_raw
+  number_datapoint: 104
+  min_value: 5
+  max_value: 1440
+  step: 1
+  internal: true
+- platform: "tuya"
+  id: timer_preset_2h_raw
+  number_datapoint: 105
+  min_value: 5
+  max_value: 1440
+  step: 1
+  internal: true
+- platform: "tuya"
+  id: timer_preset_4h_raw
+  number_datapoint: 106
+  min_value: 5
+  max_value: 1440
+  step: 1
+  internal: true
+
+# Template preset numbers (minutes, exposed to HA)
+- platform: template
+  id: timer_preset_5m
+  name: "${device_name} 5m Preset"
+  min_value: 1
+  max_value: 240
+  step: 1
+  unit_of_measurement: min
+  entity_category: config
+  lambda: |-
+    return id(timer_preset_5m_raw).state / 60.0;
+  set_action:
+    - lambda: |-
+        auto call = id(timer_preset_5m_raw).make_call();
+        call.set_value(x * 60);
+        call.perform();
+- platform: template
+  id: timer_preset_10m
+  name: "${device_name} 10m Preset"
+  min_value: 1
+  max_value: 240
+  step: 1
+  unit_of_measurement: min
+  entity_category: config
+  lambda: |-
+    return id(timer_preset_10m_raw).state / 60.0;
+  set_action:
+    - lambda: |-
+        auto call = id(timer_preset_10m_raw).make_call();
+        call.set_value(x * 60);
+        call.perform();
+- platform: template
+  id: timer_preset_30m
+  name: "${device_name} 30m Preset"
+  min_value: 1
+  max_value: 240
+  step: 1
+  unit_of_measurement: min
+  entity_category: config
+  lambda: |-
+    return id(timer_preset_30m_raw).state / 60.0;
+  set_action:
+    - lambda: |-
+        auto call = id(timer_preset_30m_raw).make_call();
+        call.set_value(x * 60);
+        call.perform();
+- platform: template
+  id: timer_preset_60m
+  name: "${device_name} 60m Preset"
+  min_value: 1
+  max_value: 240
+  step: 1
+  unit_of_measurement: min
+  entity_category: config
+  lambda: |-
+    return id(timer_preset_60m_raw).state / 60.0;
+  set_action:
+    - lambda: |-
+        auto call = id(timer_preset_60m_raw).make_call();
+        call.set_value(x * 60);
+        call.perform();
+- platform: template
+  id: timer_preset_2h
+  name: "${device_name} 2h Preset"
+  min_value: 1
+  max_value: 240
+  step: 1
+  unit_of_measurement: min
+  entity_category: config
+  lambda: |-
+    return id(timer_preset_2h_raw).state / 60.0;
+  set_action:
+    - lambda: |-
+        auto call = id(timer_preset_2h_raw).make_call();
+        call.set_value(x * 60);
+        call.perform();
+- platform: template
+  id: timer_preset_4h
+  name: "${device_name} 4h Preset"
+  min_value: 1
+  max_value: 240
+  step: 1
+  unit_of_measurement: min
+  entity_category: config
+  lambda: |-
+    return id(timer_preset_4h_raw).state / 60.0;
+  set_action:
+    - lambda: |-
+        auto call = id(timer_preset_4h_raw).make_call();
+        call.set_value(x * 60);
+        call.perform();
+
+script:
+  - id: set_expected_duration
+    mode: single
+    parameters:
+      x: float
+    then:
+      - lambda: |-
+          switch ((int)x) {
+            case 1:
+              id(expected_duration).publish_state(id(timer_preset_5m_raw).state);
+              break;
+            case 2:
+              id(expected_duration).publish_state(id(timer_preset_10m_raw).state);
+              break;
+            case 3:
+              id(expected_duration).publish_state(id(timer_preset_30m_raw).state);
+              break;
+            case 4:
+              id(expected_duration).publish_state(id(timer_preset_60m_raw).state);
+              break;
+            case 5:
+              id(expected_duration).publish_state(id(timer_preset_2h_raw).state);
+              break;
+            case 6:
+              id(expected_duration).publish_state(id(timer_preset_4h_raw).state);
+              break;
+          }
+
+select:
+- platform: "tuya"
+  id: "night_light_enum"
+  name: "Night Light"
+  enum_datapoint: 109
+  options:
+    0: Enabled
+    1: Disabled
+  entity_category: config
+  internal: true
+- platform: "tuya"
+  id: "timer_led_behavior_enum"
+  name: "Timer LED Behavior"
+  enum_datapoint: 110
+  options:
+    0: On After Blink
+    1: Off After Blink
+  entity_category: config
+  internal: true
+- platform: template
+  id: "timer_preset"
+  name: ${device_name} Timer Preset
+  options:
+    - "5m Preset"
+    - "10m Preset"
+    - "30m Preset"
+    - "60m Preset"
+    - "2h Preset"
+    - "4h Preset"
+  lambda: |-
+    return id(timer_preset).at(id(timer_preset_id).state -1).value();
+  set_action:
+    - lambda: |-
+        auto call = id(timer_preset_id).make_call();
+        call.set_value(id(timer_preset).index_of(x).value()+1);
+        call.perform();
+
+button:
+  - platform: restart
+    id: restart_button
+    name: "Restart"
