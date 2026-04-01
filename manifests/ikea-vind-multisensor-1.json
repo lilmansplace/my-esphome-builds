@@ -1,10 +1,10 @@
 {
   "name": "ikea-vind-multisensor-1",
-  "version": "v2026.3.0",
-  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
+  "version": "v2026.3.2",
+  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.2",
   "ota": {
-    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/ikea-vind-multisensor-1.bin",
-    "md5": "8004679216f7c15155348cb135db28d4",
-    "summary": "ESPHome firmware v2026.3.0"
+    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.2/ikea-vind-multisensor-1.bin",
+    "md5": "3341eb4f8a64289138e7d83840ee5f06",
+    "summary": "ESPHome firmware v2026.3.2"
   }
 }

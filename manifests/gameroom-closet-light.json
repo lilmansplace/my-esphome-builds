@@ -1,10 +1,10 @@
 {
   "name": "gameroom-closet-light",
-  "version": "v2026.3.0",
-  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
+  "version": "v2026.3.2",
+  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.2",
   "ota": {
-    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/gameroom-closet-light.bin",
-    "md5": "9f52928ba4bda6040be59aca4995ec2a",
-    "summary": "ESPHome firmware v2026.3.0"
+    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.2/gameroom-closet-light.bin",
+    "md5": "bb8b43d7da59c6150890c8f83e5f621b",
+    "summary": "ESPHome firmware v2026.3.2"
   }
 }

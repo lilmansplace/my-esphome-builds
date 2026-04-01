@@ -1,10 +1,10 @@
 {
   "name": "test-ld210",
-  "version": "v2026.3.0",
-  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
+  "version": "v2026.3.2",
+  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.2",
   "ota": {
-    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/test-ld210.bin",
-    "md5": "d68c5c19272f9799c8ed7f1a475e582a",
-    "summary": "ESPHome firmware v2026.3.0"
+    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.2/test-ld210.bin",
+    "md5": "c46b62fedc24f9eb563086948daef527",
+    "summary": "ESPHome firmware v2026.3.2"
   }
 }

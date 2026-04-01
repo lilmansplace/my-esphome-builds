@@ -1,10 +1,10 @@
 {
   "name": "xuimii-24g-mmwave-4",
-  "version": "v2026.3.0",
-  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
+  "version": "v2026.3.2",
+  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.2",
   "ota": {
-    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/xuimii-24g-mmwave-4.bin",
-    "md5": "14152a5ae7be2af4087add0815fe2cdb",
-    "summary": "ESPHome firmware v2026.3.0"
+    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.2/xuimii-24g-mmwave-4.bin",
+    "md5": "386c689f4a1bff853038e08284a08174",
+    "summary": "ESPHome firmware v2026.3.2"
   }
 }

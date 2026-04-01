@@ -1,10 +1,10 @@
 {
   "name": "airgradient-one-v9-1",
-  "version": "v2026.3.0",
-  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
+  "version": "v2026.3.2",
+  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.2",
   "ota": {
-    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/airgradient-one-v9-1.bin",
-    "md5": "5a56953e94819696febcd4564679598d",
-    "summary": "ESPHome firmware v2026.3.0"
+    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.2/airgradient-one-v9-1.bin",
+    "md5": "49a167b0cb3bcca7c328047895e7805f",
+    "summary": "ESPHome firmware v2026.3.2"
   }
 }

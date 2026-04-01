@@ -1,10 +1,10 @@
 {
   "name": "workout-room-multi-sensor",
-  "version": "v2026.3.0",
-  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
+  "version": "v2026.3.2",
+  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.2",
   "ota": {
-    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/workout-room-multi-sensor.bin",
-    "md5": "0411bddcd74d710b5ef220cc465f428b",
-    "summary": "ESPHome firmware v2026.3.0"
+    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.2/workout-room-multi-sensor.bin",
+    "md5": "9c0e2969dac485dda7c60f0f2bf101cd",
+    "summary": "ESPHome firmware v2026.3.2"
   }
 }

@@ -1,10 +1,10 @@
 {
   "name": "ratgdov25i-90137c",
-  "version": "v2026.3.0",
-  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
+  "version": "v2026.3.2",
+  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.2",
   "ota": {
-    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/ratgdov25i-90137c.bin",
-    "md5": "519fec515d5742e2af5aa0bf57a0cb99",
-    "summary": "ESPHome firmware v2026.3.0"
+    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.2/ratgdov25i-90137c.bin",
+    "md5": "838c1eb3c2b0b289809aea7b16a424a6",
+    "summary": "ESPHome firmware v2026.3.2"
   }
 }

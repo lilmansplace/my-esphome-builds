@@ -1,10 +1,10 @@
 {
   "name": "upstairs-bath-toilet-motion-light",
-  "version": "v2026.3.0",
-  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
+  "version": "v2026.3.2",
+  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.2",
   "ota": {
-    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/upstairs-bath-toilet-motion-light.bin",
-    "md5": "c77f8620fc73ec5ca419c44ca60de4b1",
-    "summary": "ESPHome firmware v2026.3.0"
+    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.2/upstairs-bath-toilet-motion-light.bin",
+    "md5": "9cab29524c82381db41c0ecf85576499",
+    "summary": "ESPHome firmware v2026.3.2"
   }
 }

@@ -1,10 +1,10 @@
 {
   "name": "lilygo-poe-bt-proxy-1",
-  "version": "v2026.3.0",
-  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.0",
+  "version": "v2026.3.2",
+  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.2",
   "ota": {
-    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.0/lilygo-poe-bt-proxy-1.bin",
-    "md5": "22c9654fd0c1d4c3eca4a6e6d4666af8",
-    "summary": "ESPHome firmware v2026.3.0"
+    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.2/lilygo-poe-bt-proxy-1.bin",
+    "md5": "3fd0cf9b15051692649b9ec5c66abccb",
+    "summary": "ESPHome firmware v2026.3.2"
   }
 }
