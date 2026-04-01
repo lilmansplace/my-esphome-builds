@@ -39,8 +39,11 @@ jobs:
         id: last
         run: |
           LAST=$(git tag --sort=-version:refname | head -1)
-          echo "tag=${LAST}" >> "$GITHUB_OUTPUT"
-          echo "Last build tag in this repo: ${LAST:-'(none)'}"
+          # Strip leading 'v' so our tags (v2026.3.0) compare cleanly against
+          # ESPHome tags (2026.3.0) which have no prefix
+          LAST_BARE="${LAST#v}"
+          echo "tag=${LAST_BARE}" >> "$GITHUB_OUTPUT"
+          echo "Last build tag in this repo: ${LAST:-'(none)'} (normalized: ${LAST_BARE:-'(none)'})"
 
       - name: Compare versions
         id: compare
@@ -58,7 +61,8 @@ jobs:
       - name: Push new release tag
         if: steps.compare.outputs.needs_build == 'true'
         run: |
-          NEW_TAG="${{ steps.esphome.outputs.version }}"
+          # Prefix with 'v' so the tag matches the 'v*' trigger in build.yml
+          NEW_TAG="v${{ steps.esphome.outputs.version }}"
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag "${NEW_TAG}"
