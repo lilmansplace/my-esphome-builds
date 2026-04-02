@@ -1,10 +1,10 @@
 {
   "name": "mj-sd01-test",
-  "version": "2026.3.2",
-  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.2",
+  "version": "2026.3.1",
+  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.1",
   "ota": {
-    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.2/mj-sd01-test.bin",
-    "md5": "66b906b8afe6990ec1cfdbdebdb7ff73",
-    "summary": "ESPHome firmware 2026.3.2"
+    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.1/mj-sd01-test.bin",
+    "md5": "e22fd26c98ddc4dd49dc2ca2b3773c81",
+    "summary": "ESPHome firmware 2026.3.1"
   }
 }

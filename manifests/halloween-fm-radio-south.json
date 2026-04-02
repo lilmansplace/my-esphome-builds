@@ -1,10 +1,10 @@
 {
   "name": "halloween-fm-radio-south",
-  "version": "2026.3.2",
-  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.2",
+  "version": "2026.3.1",
+  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.1",
   "ota": {
-    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.2/halloween-fm-radio-south.bin",
-    "md5": "7ac571e4ee759de33df953ad3887f6dd",
-    "summary": "ESPHome firmware 2026.3.2"
+    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.1/halloween-fm-radio-south.bin",
+    "md5": "65d57025d2a154512be5f092f0dd56bd",
+    "summary": "ESPHome firmware 2026.3.1"
   }
 }

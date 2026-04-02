@@ -1,10 +1,10 @@
 {
   "name": "milfra-motion-light",
-  "version": "2026.3.2",
-  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.2",
+  "version": "2026.3.1",
+  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.1",
   "ota": {
-    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.2/milfra-motion-light.bin",
-    "md5": "5d200743e6b0aed053f3c5c09d11cc56",
-    "summary": "ESPHome firmware 2026.3.2"
+    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.1/milfra-motion-light.bin",
+    "md5": "7410b05f1552a3bed249cb99bc14daf4",
+    "summary": "ESPHome firmware 2026.3.1"
   }
 }

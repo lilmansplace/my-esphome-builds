@@ -1,10 +1,10 @@
 {
   "name": "callee-closet-motion-light",
-  "version": "2026.3.2",
-  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.2",
+  "version": "2026.3.1",
+  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.1",
   "ota": {
-    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.2/callee-closet-motion-light.bin",
-    "md5": "f29f7fcb9cfb5cdbf7b7388eed556a0f",
-    "summary": "ESPHome firmware 2026.3.2"
+    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.1/callee-closet-motion-light.bin",
+    "md5": "8f800486cc5f6e7a0fd91b8d8ef4d6aa",
+    "summary": "ESPHome firmware 2026.3.1"
   }
 }

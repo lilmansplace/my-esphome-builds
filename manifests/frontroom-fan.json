@@ -1,10 +1,10 @@
 {
   "name": "frontroom-fan",
-  "version": "2026.3.2",
-  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.2",
+  "version": "2026.3.1",
+  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.1",
   "ota": {
-    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.2/frontroom-fan.bin",
-    "md5": "be3186ca375b75cc70cab54d2d55bb75",
-    "summary": "ESPHome firmware 2026.3.2"
+    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.1/frontroom-fan.bin",
+    "md5": "52a08cf98053e2fae770c65ab62695c4",
+    "summary": "ESPHome firmware 2026.3.1"
   }
 }

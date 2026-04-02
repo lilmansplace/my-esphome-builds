@@ -1,10 +1,10 @@
 {
   "name": "test-multi-sensor-1",
-  "version": "2026.3.2",
-  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.2",
+  "version": "2026.3.1",
+  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.1",
   "ota": {
-    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.2/test-multi-sensor-1.bin",
-    "md5": "98c641041860166c58604cb8d23f5a05",
-    "summary": "ESPHome firmware 2026.3.2"
+    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.1/test-multi-sensor-1.bin",
+    "md5": "19f24f99d19bbd5cf41d63a77cfa6fb5",
+    "summary": "ESPHome firmware 2026.3.1"
   }
 }

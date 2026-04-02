@@ -1,10 +1,10 @@
 {
   "name": "olimex-bluetooth-proxy-d102f8",
-  "version": "2026.3.2",
-  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.2",
+  "version": "2026.3.1",
+  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.1",
   "ota": {
-    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.2/olimex-bluetooth-proxy-d102f8.bin",
-    "md5": "64a2c2912f45231006043eea59e4d352",
-    "summary": "ESPHome firmware 2026.3.2"
+    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.1/olimex-bluetooth-proxy-d102f8.bin",
+    "md5": "23429e204f74dcf476983fcf4d59c3ce",
+    "summary": "ESPHome firmware 2026.3.1"
   }
 }

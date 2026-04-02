@@ -1,10 +1,10 @@
 {
   "name": "esphome-web-7f6c24",
-  "version": "2026.3.2",
-  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.2",
+  "version": "2026.3.1",
+  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.1",
   "ota": {
-    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.2/esphome-web-7f6c24.bin",
-    "md5": "73cf2bd5c3af3a4f0d26de6360900fa2",
-    "summary": "ESPHome firmware 2026.3.2"
+    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.1/esphome-web-7f6c24.bin",
+    "md5": "1ed1a7f9e4ced6f0eb530dea4a59b791",
+    "summary": "ESPHome firmware 2026.3.1"
   }
 }

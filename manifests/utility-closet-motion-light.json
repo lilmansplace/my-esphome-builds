@@ -1,10 +1,10 @@
 {
   "name": "utility-closet-motion-light",
-  "version": "2026.3.2",
-  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.2",
+  "version": "2026.3.1",
+  "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.1",
   "ota": {
-    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.2/utility-closet-motion-light.bin",
-    "md5": "3d6f99c581fdc6ca74f85f8fd1d06f60",
-    "summary": "ESPHome firmware 2026.3.2"
+    "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.1/utility-closet-motion-light.bin",
+    "md5": "7ebdf5e57e296cca9219fd16a3cfa8f2",
+    "summary": "ESPHome firmware 2026.3.1"
   }
 }
