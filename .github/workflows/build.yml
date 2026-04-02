@@ -245,6 +245,7 @@ jobs:
               echo "Push attempt ${i} failed, retrying..."
               sleep 5
             done
+          fi
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2.6.1
