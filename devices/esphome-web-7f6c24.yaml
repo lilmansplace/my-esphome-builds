@@ -1,7 +1,11 @@
 esphome:
   name: esphome-web-7f6c24
   friendly_name: weather-station
+  project:
+    name: lilmansplace.esphome_web_7f6c24
+    version: ${firmware_version}
 substitutions:
+  firmware_version: "0.0.0"
   friendly_name: "Weather Station"
 esp32:
   board: esp32dev

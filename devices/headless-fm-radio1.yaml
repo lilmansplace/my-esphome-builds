@@ -1,6 +1,12 @@
+substitutions:
+  firmware_version: "0.0.0"
+
 esphome:
   name: headless-fm-radio1
   friendly_name: headless-fm-radio1
+  project:
+    name: lilmansplace.headless_fm_radio1
+    version: ${firmware_version}
 esp32:
   board: esp32dev
   framework:

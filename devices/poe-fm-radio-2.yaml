@@ -1,6 +1,12 @@
+substitutions:
+  firmware_version: "0.0.0"
+
 esphome:
   name: poefmradio2
   friendly_name: PoE FM Radio 2
+  project:
+    name: lilmansplace.poe_fm_radio_2
+    version: ${firmware_version}
 
 esp32:
   board: esp32dev

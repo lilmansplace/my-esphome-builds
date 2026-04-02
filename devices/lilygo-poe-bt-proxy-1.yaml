@@ -1,10 +1,13 @@
+substitutions:
+  firmware_version: "0.0.0"
+
 esphome:
   name: lilygo-poe-bt-proxy-1
   friendly_name: lilygo-poe-bt-proxy-1
   comment: PoE Bluetooth Proxy
   project:
     name: Lilygo.PoE
-    version: 1.1.0
+    version: ${firmware_version}
   
 esp32:
   board: esp32dev

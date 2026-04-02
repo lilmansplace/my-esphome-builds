@@ -1,6 +1,12 @@
+substitutions:
+  firmware_version: "0.0.0"
+
 esphome:
   name: test-ld2410
   friendly_name: test-ld2410
+  project:
+    name: lilmansplace.test_ld210
+    version: ${firmware_version}
 
 esp8266:
   board: esp01_1m

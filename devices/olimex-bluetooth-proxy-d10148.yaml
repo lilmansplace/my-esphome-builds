@@ -1,4 +1,5 @@
 substitutions:
+  firmware_version: "0.0.0"
   name: olimex-bluetooth-proxy-d10148
 packages:
   esphome.bluetooth-proxy: github://esphome/bluetooth-proxies/olimex/olimex-esp32-poe-iso.yaml@main
@@ -10,3 +11,6 @@ ota:
 esphome:
   name: ${name}
   name_add_mac_suffix: false
+  project:
+    name: lilmansplace.olimex_bluetooth_proxy_d10148
+    version: ${firmware_version}

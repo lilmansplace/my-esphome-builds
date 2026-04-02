@@ -1,6 +1,12 @@
+substitutions:
+  firmware_version: "0.0.0"
+
 esphome:
   name: "radon-ble-relay"
   friendly_name: radon-ble-relay
+  project:
+    name: lilmansplace.radon_ble_relay
+    version: ${firmware_version}
 
 esp32:
   board: esp32dev

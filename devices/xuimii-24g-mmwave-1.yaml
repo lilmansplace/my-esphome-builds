@@ -1,10 +1,13 @@
+substitutions:
+  firmware_version: "0.0.0"
+
 esphome:
   name: 24g-mmwave-pir-sensor-1
   friendly_name: 24G MMWave Sensor 1
   comment: XuiMii XM-HE201 24G MMWave PIR Presence Sensor
   project:
     name: XuiMii.XM-HE201
-    version: 2.0.1
+    version: ${firmware_version}
 
 esp32:
   board: esp32-c3-devkitm-1

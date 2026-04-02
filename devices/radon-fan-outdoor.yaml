@@ -4,9 +4,10 @@ esphome:
   comment: Wyze Outdoor Plug
   project:
     name: Wyze.Outdoor
-    version: 1.0.0
+    version: ${firmware_version}
 
 substitutions:
+  firmware_version: "0.0.0"
   # Higher value gives lower watt readout
   current_res: "0.001"
   # Lower value gives lower voltage readout

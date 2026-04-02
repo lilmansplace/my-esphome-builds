@@ -1,10 +1,14 @@
 substitutions:
+  firmware_version: "0.0.0"
   devicename: "ikea-vind-multisensor-2"
   upper_devicename: "IKEA VINDTRIKNING Multi Sensor"
 esphome:
   name: "${devicename}"
   friendly_name: "${upper_devicename}"
   name_add_mac_suffix: true
+  project:
+    name: lilmansplace.ikea_vind_multisensor_1
+    version: ${firmware_version}
 esp32:
   framework:
     type: arduino

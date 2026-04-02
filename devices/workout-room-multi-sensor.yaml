@@ -1,10 +1,13 @@
+substitutions:
+  firmware_version: "0.0.0"
+
 esphome:
   name: workout-room-multi-sensor
   friendly_name: workout-room-multi-sensor
   comment: IKEA Vindriktning Custom
   project:
     name: IKEA.vindriktning_custom
-    version: 1.0.0
+    version: ${firmware_version}
   on_boot: #this starts the blue LED on and blinking while it connects to wifi. on_connect for wifi will change it. 
     priority: 600
     then: 

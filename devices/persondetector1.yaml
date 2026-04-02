@@ -1,7 +1,11 @@
 substitutions:
+  firmware_version: "0.0.0"
   name: persondetector1
 esphome:
   name: ${name}
+  project:
+    name: lilmansplace.persondetector1
+    version: ${firmware_version}
 esp32:
   board: esp32dev
   framework:

@@ -1,10 +1,13 @@
+substitutions:
+  firmware_version: "0.0.0"
+
 esphome:
   name: kc868-ai
   friendly_name: basement-sensors-panel
   comment: Kincony KC868-AI
   project:
     name: Kincony.kc868-ai
-    version: 1.0.0
+    version: ${firmware_version}
 
 esp32:
   board: esp32dev

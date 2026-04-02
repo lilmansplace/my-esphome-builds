@@ -5,6 +5,7 @@
 
 # Reference for substitutions: https://github.com/ajfriesen/ESPHome-AirGradient/blob/main/airgradient-one.yaml
 substitutions:
+  firmware_version: "0.0.0"
   devicename: "airgradient-one-1"
   upper_devicename: "AG One"
   ag_esphome_config_version: 0.1.0
@@ -33,6 +34,9 @@ esphome:
   #             Content-Type: application/json
   #         json:
   #           wifi: !lambda return to_string(-50);
+  project:
+    name: lilmansplace.airgradient_one_v9_1
+    version: ${firmware_version}
 
 esp32:
   board: esp32-c3-devkitm-1

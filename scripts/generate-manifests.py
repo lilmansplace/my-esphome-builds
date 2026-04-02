@@ -70,10 +70,11 @@ def main() -> int:
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    version = args.version
+    version = args.version.lstrip("v")  # strip leading 'v' so manifest matches device's project.version
+    tag = f"v{version}"                 # GitHub release/download URLs keep the 'v' prefix
     repo = args.repo
-    base_url = f"https://github.com/{repo}/releases/download/{version}"
-    changelog_url = f"https://github.com/{repo}/releases/tag/{version}"
+    base_url = f"https://github.com/{repo}/releases/download/{tag}"
+    changelog_url = f"https://github.com/{repo}/releases/tag/{tag}"
 
     bin_files = sorted(firmware_dir.glob("*.bin"))
     if not bin_files:

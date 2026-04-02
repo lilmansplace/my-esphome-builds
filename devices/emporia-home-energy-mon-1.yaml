@@ -1,9 +1,12 @@
+substitutions:
+  firmware_version: "0.0.0"
+
 esphome:
   name: emporia-home-energy-mon-1
   comment: Emporia Vue Gen 2 (VEMT-16-50A-MX)
   project:
     name: Emporia.Vue2
-    version: 1.0.0
+    version: ${firmware_version}
 
 external_components:
   - source: github://emporia-vue-local/esphome@dev

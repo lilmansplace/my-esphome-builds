@@ -1,4 +1,5 @@
 substitutions:
+  firmware_version: "0.0.0"
   disp_name: MyQKiller
 
 esphome:
@@ -6,7 +7,7 @@ esphome:
   comment: MyQ PoE Clicker
   project:
     name: Olimex.ESP32-POE-ISO
-    version: 1.0.0
+    version: ${firmware_version}
 esp32:
   board: esp32-poe-iso
   framework:

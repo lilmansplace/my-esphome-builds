@@ -1,4 +1,5 @@
 substitutions:
+  firmware_version: "0.0.0"
   device_name: basement-bedroom-fan
   friendly_name: Basement Bedroom Fan and Light
   
@@ -7,7 +8,7 @@ esphome:
   comment: TreatLife DS03 (ESP)
   project:
     name: Treatlife.DS03_ESP
-    version: 1.0.0
+    version: ${firmware_version}
 
 esp8266:
   board: esp01_1m

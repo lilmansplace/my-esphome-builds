@@ -141,7 +141,13 @@ jobs:
       # -----------------------------------------------------------------
       - name: Compile ${{ matrix.device }}
         run: |
-          esphome compile devices/${{ matrix.device }}.yaml
+          # Strip leading 'v' from tag so firmware_version is e.g. 2026.3.2
+          # On non-tag builds (push to main, PR) the substitution stays "0.0.0"
+          REF="${{ github.ref_name }}"
+          VERSION="${REF#v}"
+          esphome compile \
+            --substitution "firmware_version=${VERSION}" \
+            devices/${{ matrix.device }}.yaml
 
       # -----------------------------------------------------------------
       # Locate and stage the firmware binary for upload

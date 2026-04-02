@@ -1,5 +1,11 @@
+substitutions:
+  firmware_version: "0.0.0"
+
 esphome:
   name: test-multi-sensor-1
+  project:
+    name: lilmansplace.test_multi_sensor_1
+    version: ${firmware_version}
 esp32:
   board: esp32dev
   framework:
