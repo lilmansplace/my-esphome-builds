@@ -1,10 +1,10 @@
 {
   "name": "emporia-home-energy-mon-2",
-  "version": "v2026.3.2",
+  "version": "2026.3.2",
   "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.2",
   "ota": {
     "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.2/emporia-home-energy-mon-2.bin",
-    "md5": "3661488f1b65a71f06363fa5ef060ad7",
-    "summary": "ESPHome firmware v2026.3.2"
+    "md5": "55d9285f67e17a75b267449f9e2b632c",
+    "summary": "ESPHome firmware 2026.3.2"
   }
 }

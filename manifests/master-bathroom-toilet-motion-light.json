@@ -1,10 +1,10 @@
 {
   "name": "master-bathroom-toilet-motion-light",
-  "version": "v2026.3.2",
+  "version": "2026.3.2",
   "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.2",
   "ota": {
     "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.2/master-bathroom-toilet-motion-light.bin",
-    "md5": "c5c8d21fc74474d18746ef20460e20b2",
-    "summary": "ESPHome firmware v2026.3.2"
+    "md5": "69d63cb4bcfc674ac93a1b1d6c17895d",
+    "summary": "ESPHome firmware 2026.3.2"
   }
 }

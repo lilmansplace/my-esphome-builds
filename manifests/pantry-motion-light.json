@@ -1,10 +1,10 @@
 {
   "name": "pantry-motion-light",
-  "version": "v2026.3.2",
+  "version": "2026.3.2",
   "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.2",
   "ota": {
     "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.2/pantry-motion-light.bin",
-    "md5": "ab63bc28d399a0617b92fa86e86b24a4",
-    "summary": "ESPHome firmware v2026.3.2"
+    "md5": "6d3b50afc80cc46f542ba25df74dc437",
+    "summary": "ESPHome firmware 2026.3.2"
   }
 }

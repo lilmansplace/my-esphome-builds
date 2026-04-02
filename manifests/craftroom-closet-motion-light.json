@@ -1,10 +1,10 @@
 {
   "name": "craftroom-closet-motion-light",
-  "version": "v2026.3.2",
+  "version": "2026.3.2",
   "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.2",
   "ota": {
     "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.2/craftroom-closet-motion-light.bin",
-    "md5": "0be6f52b179807831cd8b8a048fdc414",
-    "summary": "ESPHome firmware v2026.3.2"
+    "md5": "1453f6e787340b32058936a6fd362806",
+    "summary": "ESPHome firmware 2026.3.2"
   }
 }

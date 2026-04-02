@@ -1,10 +1,10 @@
 {
   "name": "small-garage-door-plug",
-  "version": "v2026.3.2",
+  "version": "2026.3.2",
   "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.2",
   "ota": {
     "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.2/small-garage-door-plug.bin",
-    "md5": "99ffd4e9ff4ff098454eb748c7c61f0d",
-    "summary": "ESPHome firmware v2026.3.2"
+    "md5": "2ff243d6445469a6c8385f40eca34c9b",
+    "summary": "ESPHome firmware 2026.3.2"
   }
 }

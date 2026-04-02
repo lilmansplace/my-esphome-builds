@@ -1,10 +1,10 @@
 {
   "name": "radon-ble-relay",
-  "version": "v2026.3.2",
+  "version": "2026.3.2",
   "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.2",
   "ota": {
     "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.2/radon-ble-relay.bin",
-    "md5": "a05d3c85858fc88f391596d79edd8d0c",
-    "summary": "ESPHome firmware v2026.3.2"
+    "md5": "d2a4df6e7f18775ff5144cb2e3f7c979",
+    "summary": "ESPHome firmware 2026.3.2"
   }
 }

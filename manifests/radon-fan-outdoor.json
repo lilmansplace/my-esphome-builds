@@ -1,10 +1,10 @@
 {
   "name": "radon-fan-outdoor",
-  "version": "v2026.3.2",
+  "version": "2026.3.2",
   "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.2",
   "ota": {
     "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.2/radon-fan-outdoor.bin",
-    "md5": "1d7375ea73d1066b59ccd4c3e2d6114b",
-    "summary": "ESPHome firmware v2026.3.2"
+    "md5": "42145bd3ee665bb698d04886c70351dd",
+    "summary": "ESPHome firmware 2026.3.2"
   }
 }

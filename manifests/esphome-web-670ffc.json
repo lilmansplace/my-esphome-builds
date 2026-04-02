@@ -1,10 +1,10 @@
 {
   "name": "esphome-web-670ffc",
-  "version": "v2026.3.2",
+  "version": "2026.3.2",
   "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.2",
   "ota": {
     "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.2/esphome-web-670ffc.bin",
-    "md5": "3d0f62ad7e3c6f6a71a09406f9d90126",
-    "summary": "ESPHome firmware v2026.3.2"
+    "md5": "76dff6c30fc502ee9e3cb053402c7d3e",
+    "summary": "ESPHome firmware 2026.3.2"
   }
 }

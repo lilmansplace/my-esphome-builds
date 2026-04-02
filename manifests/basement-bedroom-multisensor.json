@@ -1,10 +1,10 @@
 {
   "name": "basement-bedroom-multisensor",
-  "version": "v2026.3.2",
+  "version": "2026.3.2",
   "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.2",
   "ota": {
     "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.2/basement-bedroom-multisensor.bin",
-    "md5": "0ef4bb3208704a5a6a434f8873162d27",
-    "summary": "ESPHome firmware v2026.3.2"
+    "md5": "6255ce7070763c9e1e152713f38fe896",
+    "summary": "ESPHome firmware 2026.3.2"
   }
 }

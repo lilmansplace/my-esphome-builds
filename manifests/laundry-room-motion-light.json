@@ -1,10 +1,10 @@
 {
   "name": "laundry-room-motion-light",
-  "version": "v2026.3.2",
+  "version": "2026.3.2",
   "changelog": "https://github.com/lilmansplace/my-esphome-builds/releases/tag/v2026.3.2",
   "ota": {
     "url": "https://github.com/lilmansplace/my-esphome-builds/releases/download/v2026.3.2/laundry-room-motion-light.bin",
-    "md5": "f2333329707e98aef6ae1267dcd3303d",
-    "summary": "ESPHome firmware v2026.3.2"
+    "md5": "8cb968bea60604347783912c51e5996c",
+    "summary": "ESPHome firmware 2026.3.2"
   }
 }
