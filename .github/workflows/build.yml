@@ -145,9 +145,7 @@ jobs:
           # On non-tag builds (push to main, PR) the substitution stays "0.0.0"
           REF="${{ github.ref_name }}"
           VERSION="${REF#v}"
-          esphome compile \
-            --substitution "firmware_version=${VERSION}" \
-            devices/${{ matrix.device }}.yaml
+          esphome -s firmware_version "${VERSION}" compile devices/${{ matrix.device }}.yaml
 
       # -----------------------------------------------------------------
       # Locate and stage the firmware binary for upload
