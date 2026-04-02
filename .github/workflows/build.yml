@@ -239,8 +239,12 @@ jobs:
             echo "No manifest changes to commit."
           else
             git commit -m "chore: update OTA manifests for ${{ steps.version.outputs.version }} [skip ci]"
-            git push origin HEAD:refs/heads/main
-          fi
+            # Retry push with rebase in case another parallel release committed first
+            for i in 1 2 3; do
+              git pull --rebase origin main && git push origin HEAD:refs/heads/main && break
+              echo "Push attempt ${i} failed, retrying..."
+              sleep 5
+            done
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2.6.1
